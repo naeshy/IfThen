@@ -1,0 +1,23 @@
+﻿## Interface: 70100
+## Title: IfThen
+## Version: 2.0.8
+## X-AddonType: FULL
+## Notes: Allows you to create your own IF THEN statements that will dynamically change the function of a button
+## Dependencies:
+## SavedVariables: IFTHEN_text_version, IFTHEN_text, IFTHEN_settings, IFTHEN_cache
+## LoadOnDemand: 0
+## DefaultState: enabled
+
+Lib\LibStub.lua
+Lib\CallbackHandler-1.0.lua
+Lib\LibDataBroker-1.1.lua
+
+StringParsing.lua
+HiddenTooltip.lua
+SyntaxColor.lua
+Macro.lua
+Methods.lua
+Documentation.lua
+Parsing.lua
+IfThen.lua
+IfThen.xml

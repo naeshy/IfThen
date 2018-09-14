@@ -1,0 +1,11 @@
+<Bindings>
+	<Binding name="MACRO IfThen_Btn" header="IFTHEN" category="ADDONS">
+		--Its all in the macro
+	</Binding>
+	<Binding name="IFTHEN_EDIT" description="BINDING_NAME_IFTHEN_EDIT" header="IFTHEN" category="ADDONS">
+		IfThen:Slash("edit");
+	</Binding>
+	<Binding name="IFTHEN_MOREHELP" description="BINDING_NAME_IFTHEN_MOREHELP" header="IFTHEN" category="ADDONS">
+		IfThen:Slash("morehelp");
+	</Binding>
+</Bindings>

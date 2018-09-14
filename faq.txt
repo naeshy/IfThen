@@ -1,0 +1,181 @@
+﻿IfThen - FAQ
+
+
+Q: What is this addon for and what does it do?
+A:	This addon is intended for people that have a basic understanding of programming. Specifically conditional If-Then statements.
+	IfThen allows you to write your own if-then statements that will be evaluated and run whenever you press a button, or they can trigger on certain events ingame.
+	If provides a simple text editor, a fully documented API and some simple If-Then syntax so that you can string together almost anything you want to react to ingame.
+	Two examples:
+		IF HaveOpenQuest("My daily fishing quest") AND InZone("Stormwind") THEN Cast("Fishing");
+		OnEvent("GroupInvite") AND InLFGQueue() THEN DeclineGroup() AND Reply("Sorry, i'm already in the LFG queue");
+
+
+Q: I don't understand this addon.
+A:	If you don't understand the addon then you should NOT use it. It was never intended for non-programmers.
+
+
+Q: I still dont get it, can't you make this easier?
+A:	No! Now go away before i taunt you a second time!
+
+
+Q: What is the syntax to write if-then statements?
+A:	Type '/ifthen morehelp' ingame and you will see the help window that will explain the syntax, it also list all the supported methods and variables available along with their arguments.
+
+
+Q: I have a request for a function that isn't available in the current API.
+A:	1. Check though the list of API's one more time (you might have missed it).
+	2. Make a post at CurseForge or WowInterface and i will see what i can do (no promises).
+
+
+Q: What is the official website for IfThen?
+A:	This addon is hosted on curse.com (curseforge) and wowinterface.com. Those are the two websites that i publish to and the updates are identical.
+	From time to time, we see other sites that rip addons from curse or wowinterface and host them on their own website.
+	I have no control over the content on such sites, or what you are actually downloading then. Some of them bundle in malware/trojans.
+	The only advice i can give is to use the official websites: curse.com (curseforge) and wowinterface.com.
+
+
+Q: I have a macro, can i use the IfThen functions directly from macros?
+A:	Yes you can.
+	Use /run IfScript('functionName', ' "arg1","arg2","arg3" ') and it will return true or false.
+	(Notice that the arguments are all wrapped in a single string)
+
+
+Q: Will this addon be translated into other languages than English?
+A:	No. Since this addon is so much programming/IDE related that it makes little sense to translate it.
+	Anyone that has done any sort of coding knows that all programming-languages use English syntax and structure.
+	(yes; i know there are a few like Norwegian Java but they are the obscure exception).
+	Note that many of the variables like %playerClass%, %targetFaction% and so on will return localized strings.
+	If you are running the german client of the game for example then %playerClass% will return 'Krieger' ('Warrior' in english).
+
+
+Q: Can I do several /cast or /use with a single buttonpress?
+A:	Short answer:	No.
+	Long answer:	No, because there are built-in limitations in WoW that prevent us from doing more than one /use, /cast, etc per button-press ('user-initated hw event' to be precise).
+					Blizzard actually wants you to play the game, not just press a single button once and then collect loot.
+					The addon also supports events and those do not support /use, /cast, etc either ('user-initated' remember).
+					And finally; Blizzard blocks macros from being edited when you are in combat, so then we can't dynamically rewrite them.
+
+
+Q: But, I can make a macro that has several /use, /cast, etc inside it?
+A:	Yes you can do that, but only the first viable /use or /cast in the macro will be executed while the rest is simply skipped.
+	If a spell/item is on cooldown then it's not 'viable' and the macro will attempt the next /use, /cast.
+	If that is what you want to do, then take a look at the RawMacro() function.
+
+
+Q: Can the macro be changed while i'm in combat?
+A:	Short answer:	No.
+	Long answer:	Blizzard blocks macros from being edited when you are in combat, so then we can't rewrite them.
+					This means that the UseItem(), Cast(), RawMacro() and other functions that modify the macro will not work when you are in combat.
+
+
+Q: Is there a way to automatically run a macro?
+A:	Short answer:	No.
+	Long answer:	There is no way to run a macro other than having it on your actionbar and then pressing that button (or the key/mousebutton associated with it).
+					Many actions ingame are like this. They require a 'user-initated hardware event'; something that originated from a keyboard, mouse or gamecontroller to work.
+
+
+Q: Can I make my character move around (i.e. walk, run) on his own?
+A:	Nope. Not possible. No addon can.
+
+
+Q: Can i have several macros that do different things instead of just the single, default one?
+A:	Yes this is possible. Look in the 'MacroStart' section under '/ifthen morehelp'.
+
+
+Q: So the addon supports IF, will you add support for ELSE any time?
+A:	Short answer:	No.
+	Long answer:	The IF-THEN syntax is very simple and the idea with this addon is to let the user have a list of IF-statements. Just like how firewalls apply filtering rules where the first line
+					that match the incoming traffic pattern is used and everything else is ignored. With an ELSE statement supported then that simple design would break. Basically the ELSE statement would
+					prevent any lines after it to be even evaluated.
+					For example:
+						IF InZone("IronForge") THEN Print("I am in IronForge") ELSE Print("I am not in IronForge");
+						IF InZone("UnderCity") THEN Print("I am in UnderCity");
+					The second line here (undercity) would never be done because the first line's ELSE statement would be executed on everything that didnt match the first IF part.
+					At this point you might think about ELSEIF statements. Well those are basically the same as just another IF-statement (and we already got those).
+
+
+Q: Will you add support for multiple set's of statements per character, instead of having all statements be global?
+A:	If you have issues where you for example have 2 characters (a hunter and mage) and you only want something to happen with one of you classes then you
+	can very easily include arguments into the statements themselves like for example IsClass() or HasName()
+	For example:
+		# This would not look right if you were playing a mage;
+		OnEvent("GroupInvite") THEN Reply("Thanks for the invite, this hunter is now happy");
+
+		# This is better;
+		OnEvent("GroupInvite") AND IsClass("hunter") THEN Reply("Thanks for the invite, this hunter is now happy");
+		OnEvent("GroupInvite") AND IsClass("mage")   THEN Reply("Thanks for the invite, this mage is now happy");
+
+
+Q: Where are all the settings and if-then statements saved on disk?
+A:	Just like for all other addons, the settings and statements are stored in the WTF-folder.
+	It will be the "World of Warcraft\WTF\Account\<your account name>\SavedVariables" folder.
+
+
+Q: Are databroker addons supported?
+A:	Yes.
+	All addons that use LibDataBroker (i.e. Titan and many others) are supported.
+	It adds 2 launch shortcuts. One for the edit window and one for the help section.
+
+
+Q: This addon screws up with <insert some random addon here>, can you fix it?
+A:	If I get the name of the addon, screenshots that shows the problem and a good description from you, then yes maybe.
+	Raging about it in chat or simply telling me that 'its broken' isn't helpful.
+		-What other addons are you currently running?
+		-Try disabling all of them, except IfThen and see if it works.
+		-Make sure you have LUA errors enabled so you can see any errors. Type "/console scriptErrors 1" in chat.
+	Finally, make a good bug-report on CurseForge.
+
+
+Q: Will you integrate support for <insert some random addon/library here>?
+A:	Mmmaybe.
+	The idea is to make this addon somewhat independent of other addons, keep it small in size and have fast performance.
+	However, if i find compelling reasons to add a library feature then i most likely will integrate it directly into the addon itself.
+	DBMTimer() is an example of such a function that uses 'Deadly Boss Mods' to create a timer. DataBroker addons are also supported.
+
+
+Q: What other 'cool' stuff can't be done ingame :(
+A:	Player links (i.e. [Myplayername] ) can't be sent in chat for other players to see, it only works locally using Print()
+	RealID names of people (Battle.Net) can't be sent to other players to see, it only works locally. This is a good thing. (see |K string for more info).
+	Can't do multiple /use or /cast after one another.
+	Can't rewrite macro's when in combat.
+	Can't unhook the Spellcheck feature without doing a /reload, and when its enabled, Blizzard marks the chat as tainted so you cant type /focus or /target in chat (you can still use the mouse of corse).
+	Can't unhook slash commands without doing a /reload
+	Can't use threads.
+	Can't create an event for when your fishing-bobber has caught something (believe me; i have tried).
+
+
+Q: Won't all this stuff degrade the performance of the game?
+A:	Not really. The addon is written with performance in mind, and the principe that "doing nothing, is really, really efficient".
+	The raw text is after you close the edit window, saved, parsed and translated into an data-structure that is very fast to execute.
+	The principle is the same as for .Net & Java; You convert the raw text (sourcecode) into bytecode that is whats being executed at runtime.
+	Although the addon does	not actually -compile- any code, the principle is the same.
+
+	The addon also dynamically determines and subscribes only to the events that it needs based on the raw text.
+	If you dont have any OnEvent("Chat") statements for example, then it will not hook into the game-events for chat (WoW got over 15 different events for chat).
+	It even differentiates and only subscribe to those few chat channels that you listen for (raid, party, guild etc).
+	Another example would be the OnEvent("Tick") event that is designed to fire once a second. If you do not use that event in you raw text,
+	then it will not call the code at all (commenting out un-used statements is also a nice trick to improve performance even more).
+
+	The same goes for variables. There are over 120 different variables and most of these are dynamic; i.e. they can not be expanded at parse-time,
+	but must be processed at run-time. However the code will at parse-time go though the raw text and determine which
+	variables are referenced, and which are not. Thereby improving performance at run-time.
+	%targetName% is an example of a dynamic variable. One can not determine the name of the targeted player until the point you actually run the code.
+	%playerName% however is static. It never changes, and is actually expanded at parse-time so nothing extra is needed to be done at run-time.
+
+	The 'moreHelp' window also uses the principe of delaying work until it's actually needed. The documentation text shown is not generated for display until the window is shown.
+	After its been generated, it's stored in a temporary table so that the next time its requested, it uses no cpu-cycles at all but is just fetched from memory.
+
+	All of this goes on in the backgound and is completely transparent to the user. It simply works.
+
+
+Q: Ok, so the addon is awesome-ness itself. What's the worst thing you can do with it?
+A:	If you really want to trash your game, then its always possible. Here are some examples:
+	OnEvent("Tick") events are executed once a second. Having lots and lots of these will make the addon use more memory.
+	It will be a slow trickle of memory continuously being used, but the addon is designed to do to Garbage Collect at regular intervals (maybe if you did like 500 events?).
+
+	You can create an infinite loop between 2 events. For example OnEvent("Chat") and using Chat() as an automated response.
+	However, in practice the ingame chat-flood limit would kick in pretty fast and block you if you tried.
+	The Reply() function is actually baby-proofed against this scenario, it will not record youself as the last person that initated an event.
+
+	If you try to use lots and lots of Cooldown() or SetTimer() statements, then the addon will eventually give you a warning message about degrading performance.
+	The addon automatically cleanup expired timers and cooldowns, but if you had alot of them running at the same time, then it could degrade performance (again, maybe... 500?).

@@ -1,0 +1,1043 @@
+﻿<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\..\FrameXML\UI.xsd">
+
+<!-- This is the hidden frame that launches the whole addon -->
+<Frame name="IfThenFrame" parent="UIParent" hidden="true">
+	<Scripts>
+		<OnLoad>IfThen:OnLoad(self);</OnLoad>
+		<OnEvent>IfThen:OnEvent(self, event, ...);</OnEvent>
+	</Scripts>
+</Frame>
+
+<!-- These frames are used by the OnEvent feature -->
+<Frame name="IfThenFrame_OnEvent" parent="UIParent" hidden="true">
+	<Scripts>
+		<OnEvent>IfThen:OnEvent_OnEvent(self, event, ...);</OnEvent>
+	</Scripts>
+</Frame>
+<Frame name="IfThenFrame_OnEvent_Background" parent="UIParent" hidden="true">
+	<Scripts>
+		<OnEvent>IfThen:OnEvent_Background(self, event, ...);</OnEvent>
+	</Scripts>
+</Frame>
+<!-- These frames are used to estimate timers and garbage collection -->
+<Frame name="IfThenFrame_OnEvent_OnUpdate" parent="" toplevel="false" hidden="false" frameStrata="BACKGROUND">
+	<!-- This frame has no parent on purpose so that if 'UIParent' is hidden the it will still trigger -->
+	<Size><AbsDimension x="1" y="1"/></Size>
+	<Anchors><Anchor point="TOPLEFT"/></Anchors>
+	<Scripts>
+		<OnUpdate>IfThen:OnEvent_OnUpdate(self, elapsed);</OnUpdate>
+	</Scripts>
+</Frame>
+<Frame name="IfThenFrame_OnEvent_OnGCUpdate" parent="" toplevel="false" hidden="false" frameStrata="BACKGROUND">
+	<!-- This frame has no parent on purpose so that if 'UIParent' is hidden the it will still trigger -->
+	<Size><AbsDimension x="1" y="1"/></Size>
+	<Anchors><Anchor point="TOPLEFT"/></Anchors>
+	<Scripts>
+		<OnUpdate>IfThen:OnEvent_OnGCUpdate(self, elapsed);</OnUpdate>
+	</Scripts>
+</Frame>
+
+<!-- These are the custom font & button styles that we have defined -->
+<Font name="IfThenXML_Font_Title" inherits="GameFontNormalLarge" outline="NORMAL" virtual="true"/>
+<Font name="IfThenXML_Font_Edit" inherits="NumberFont_Normal_Med" virtual="true"/>
+<Font name="IfThenXML_Font_Edit_LineNumber" inherits="NumberFont_Normal_Med" outline="NONE" justifyV="MIDDLE" justifyH="LEFT" spacing="0" virtual="true">
+	<!--FontHeight Must be the same size as IfThenXML_Font_Edit to prevent skewed lines -->
+	<Color r="0.502" g="0" b="0.502"/>
+</Font>
+<Font name="IfThenXML_Font_Search" inherits="NumberFont_Normal_Med" virtual="true"/>
+<Font name="IfThenXML_Font_Help" inherits="NumberFont_Normal_Med" virtual="true"/>
+<Font name="IfThenXML_Font_PageNum" inherits="NumberFont_Outline_Large" virtual="true"/>
+<Font name="IfThenXML_Font_Special" inherits="GameFontNormal" virtual="true">
+	<Color r="0" g="0.72" b="1"/> <!-- Blue color: 00B8FF -->
+</Font>
+<Font name="IfThenXML_Font_SpecialHighlight" inherits="IfThenXML_Font_Special" virtual="true">
+	<Color r="0.12" g="0.84" b="1"/> <!-- Slightly brighter blue: 1ED6FF -->
+</Font>
+<Button name="IfThenXML_Button" inherits="UIPanelButtonTemplate" virtual="true">
+	<Size><AbsDimension x="90" y="22"/></Size>
+</Button>
+<Button name="IfThenXML_ButtonSpecial" inherits="IfThenXML_Button" virtual="true">
+	<ButtonText name="$parentText"/>
+	<NormalFont style="IfThenXML_Font_Special"/>
+	<HighlightFont style="IfThenXML_Font_SpecialHighlight"/>
+</Button>
+<Editbox name="IfThen_FilterBoxTemplate" inherits="SearchBoxTemplate" letters="40" autoFocus="false" virtual="true">
+	<!-- This template is almost identical with SearchBoxTemplate except that allow to override the default 'Search' string with an custom set attribute -->
+	<Attributes>
+		<Attribute name="defaultString" type="string" value="Search"/> <!-- Default is the non-localized string 'Search' (since the rest of the UI not localized) -->
+	</Attributes>
+	<Scripts>
+		<OnLoad>IfThen:FilterBoxTemplate_OnLoad(self)</OnLoad>
+		<OnEditFocusLost>IfThen:FilterBoxTemplate_OnEditFocusLost(self);</OnEditFocusLost>
+		<OnEditFocusGained>IfThen:FilterBoxTemplate_OnEditFocusGained(self);</OnEditFocusGained>
+	</Scripts>
+</Editbox>
+
+
+<!-- This frame holds the Edit Window -->
+<!--Source: http://wow.incgamers.com/forums/showthread.php?t=375691 -->
+<Frame name="IfThenXML_Edit_Frame" parent="UIParent" movable="true" resizable="false" enableKeyboard="true" enableMouseWheel="true" enableMouse="true" frameStrata="HIGH" toplevel="true" hidden="true">
+	<!-- Size is adjusted by setting anchors relative to parent -->
+	<Anchors>
+		<!--
+		<Anchor point="TOPLEFT"><Offset><AbsDimension x="300" y="-25"/></Offset></Anchor>
+		<Anchor point="BOTTOMRIGHT"><Offset><AbsDimension x="-250" y="105"/></Offset></Anchor>
+		-->
+		<!-- 1920x1080
+		X=(300 * 100) / 1920		=15,625				=0.15625
+		Y=(25 * 100) / 1080			=2,31481481481481	=-0.02315
+		X=(250 * 100) / 1920		=13,0208333333333	=-0.13021
+		Y=(105 * 100) / 1080		=9,72222222222222	=0.09722
+		-->
+		<Anchor point="TOPLEFT"><Offset><RelDimension x="0.17" y="-0.02315"/></Offset></Anchor>
+		<Anchor point="BOTTOMRIGHT"><Offset><RelDimension x="-0.15" y="0.07"/></Offset></Anchor>
+	</Anchors>
+	<!-- Titleregion is the area where the user can click and move the frame -->
+	<TitleRegion>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT"><Offset><AbsDimension x="0" y="0"/></Offset></Anchor>
+			<Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT"><Offset><AbsDimension x="0" y="-19"/></Offset></Anchor>
+		</Anchors>
+	</TitleRegion>
+	<Scripts>
+		<OnKeyDown>if (key=="ESCAPE") then IfThen:Edit_Close(); end</OnKeyDown>
+		<OnMouseDown>IfThen:ToggleFrameStrata(self, true);</OnMouseDown>
+		<OnUpdate>IfThen:ToggleFrameStrata(self, false);</OnUpdate>
+	</Scripts>
+
+	<!-- Border texture -->
+	<Backdrop bgFile="Interface\TutorialFrame\TutorialFrameBackground" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+		<EdgeSize><AbsValue val="16"/></EdgeSize>
+		<TileSize><AbsValue val="32"/></TileSize>
+		<BackgroundInsets><AbsInset left="5" right="5" top="5" bottom="5"/></BackgroundInsets>
+	</Backdrop>
+
+	<!-- The form title, info-text and background -->
+	<Layers>
+		<!-- FontStrings -->
+		<Layer level="ARTWORK">
+			<!-- At the top of the form -->
+			<FontString name="IfThenXML_Edit_Title" inherits="IfThenXML_Font_Title" text="IfThen: Edit box">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">
+						<Offset><AbsDimension x="10" y="-15"/></Offset>
+					</Anchor>
+				</Anchors>
+			</FontString>
+
+			<FontString name="IfThenXML_Edit_FilterInfo" inherits="GameFontHighlightSmall" text="">
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT">
+						<Offset><AbsDimension x="-260" y="-28"/></Offset>
+					</Anchor>
+				</Anchors>
+			</FontString>
+
+			<!-- At the bottom of the form -->
+			<FontString name="IfThenXML_Edit_SearchInfo" inherits="GameFontHighlightSmall" text="Press TAB to switch between search/edit.">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeTo="$parent" relativePoint="BOTTOMLEFT">
+						<Offset><AbsDimension x="14" y="64"/></Offset>
+					</Anchor>
+				</Anchors>
+			</FontString>
+
+			<FontString name="IfThenXML_Edit_TextCount" inherits="GameFontHighlightSmall" text="X/Y characters used">
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT">
+						<Offset><AbsDimension x="-25" y="38"/></Offset>
+					</Anchor>
+				</Anchors>
+			</FontString>
+
+			<FontString name="IfThenXML_Edit_PageNum" inherits="IfThenXML_Font_PageNum" text="-1">
+				<Size><AbsDimension x="18" y="18"/></Size>
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT">
+						<Offset><AbsDimension x="-110" y="58"/></Offset>
+					</Anchor>
+				</Anchors>
+			</FontString>
+		</Layer>
+
+		<!-- Background color -->
+		<Layer level="BACKGROUND">
+			<Texture>
+				<Color r="0" g="0" b="0" a="0.70"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT"><Offset><AbsDimension x="0" y="0"/></Offset></Anchor>
+					<Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT"><Offset><AbsDimension x="0" y="0"/></Offset></Anchor>
+				</Anchors>
+			</Texture>
+		</Layer>
+	</Layers>
+
+	<Frames>
+		<!-- At the top of the form -->
+		<Button name="IfThenXML_Edit_CloseButton1" inherits="UIPanelCloseButton">
+			<Anchors>
+				<Anchor point="TOPRIGHT"><Offset><AbsDimension x="-3" y="-3" /></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnClick>IfThen:Edit_Close();</OnClick>
+			</Scripts>
+		</Button>
+
+
+		<!-- Inner frame around the scrollframe and editbox -->
+		<Frame name="IfThenXML_Edit_SubFrame" parent="IfThenXML_Edit_Frame">
+			<Anchors>
+				<Anchor point="TOPLEFT"><Offset><AbsDimension x="7" y="-40"/></Offset></Anchor>
+				<Anchor point="BOTTOMRIGHT"><Offset><AbsDimension x="-6" y="78"/></Offset></Anchor>
+			</Anchors>
+
+			<!-- This defines the outer frame texture for the scrollframe -->
+			<Backdrop bgFile="Interface\ChatFrame\ChatFrameBackground" edgeFile="Interface\Buttons\UI-SliderBar-Border" tile="true">
+				<BackgroundInsets><AbsInset left="3" right="3" top="6" bottom="6" /></BackgroundInsets>
+				<TileSize><AbsValue val="16" /></TileSize>
+				<EdgeSize><AbsValue val="9" /></EdgeSize>
+			</Backdrop>
+
+			<Frames>
+				<ScrollFrame name="IfThenXML_Edit_ScrollFrame2">
+					<Anchors>
+						<Anchor point="TOPLEFT"><Offset><AbsDimension x="6" y="-12"/></Offset></Anchor>
+						<Anchor point="BOTTOM" relativePoint="BOTTOM"><Offset><AbsDimension x="0" y="8"/></Offset></Anchor>
+						<Anchor point="RIGHT" relativePoint="TOPLEFT"><Offset><AbsDimension x="39" y="0"/></Offset></Anchor>
+					</Anchors>
+
+					<Layers>
+						<!-- Background for the linenumbers -->
+						<Layer level="BACKGROUND">
+							<Texture>
+								<Color r="0" g="0" b="0" a="1.0"/>
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="IfThenXML_Edit_ScrollFrame2" relativePoint="TOPLEFT"><Offset><AbsDimension x="-3" y="6"/></Offset></Anchor>
+									<Anchor point="BOTTOMRIGHT" relativeTo="IfThenXML_Edit_ScrollFrame2" relativePoint="BOTTOMRIGHT"><Offset><AbsDimension x="0" y="-2"/></Offset></Anchor>
+								</Anchors>
+							</Texture>
+						</Layer>
+					</Layers>
+
+					<ScrollChild>
+						<EditBox name="IfThenXML_Edit_LineNumberBox" multiLine="true" maxLines="100" letters="8100" nonspacewrap="true" spacing="1" autoFocus="false">
+							<!-- Because of how Scrollframe works we need to set a .Width and .Height -->
+							<!-- This is dynamically adjusted in the <OnSizeChanged> event of the ScrollFrame -->
+							<Size><AbsDimension x="100" y="100"/></Size>
+							<Scripts>
+								<OnEditFocusGained>self:ClearFocus();</OnEditFocusGained>
+							</Scripts>
+
+							<FontString inherits="IfThenXML_Font_Edit_LineNumber"/>
+						</EditBox>
+					</ScrollChild>
+
+					<Scripts>
+						<OnSizeChanged>
+							local edt = IfThenXML_Edit_LineNumberBox;
+							edt:SetWidth(self:GetWidth());
+							edt:SetHeight(self:GetHeight());
+						</OnSizeChanged>
+					</Scripts>
+				</ScrollFrame>
+
+				<ScrollFrame name="IfThenXML_Edit_ScrollFrame" inherits="UIPanelScrollFrameTemplate">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="IfThenXML_Edit_ScrollFrame2" relativePoint="TOPRIGHT"><Offset><AbsDimension x="0" y="0"/></Offset></Anchor>
+						<Anchor point="BOTTOMRIGHT"><Offset><AbsDimension x="-26" y="8"/></Offset></Anchor>
+					</Anchors>
+
+					<Layers>
+						<!-- Background for the Slider -->
+						<Layer level="BORDER">
+							<Texture file="Interface\ChatFrame\ChatFrameBackground">
+								<Gradient>
+									<MinColor r="0.1" g="0.1" b="0.1"/>
+									<MaxColor r="0" g="0" b="0"/>
+								</Gradient>
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="IfThenXML_Edit_ScrollFrame" relativePoint="TOPRIGHT"><Offset><AbsDimension x="0" y="6"/></Offset></Anchor>
+									<Anchor point="BOTTOMRIGHT" relativeTo="IfThenXML_Edit_ScrollFrame" relativePoint="BOTTOMRIGHT"><Offset><AbsDimension x="23" y="-2"/></Offset></Anchor>
+								</Anchors>
+							</Texture>
+						</Layer>
+
+						<!-- Background for the Editbox -->
+						<Layer level="BACKGROUND">
+							<Texture>
+								<Color r=".2" g=".2" b=".2" a="1.0"/>
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="IfThenXML_Edit_ScrollFrame" relativePoint="TOPLEFT"><Offset><AbsDimension x="-3" y="6"/></Offset></Anchor>
+									<Anchor point="BOTTOMRIGHT" relativeTo="IfThenXML_Edit_ScrollFrame" relativePoint="BOTTOMRIGHT"><Offset><AbsDimension x="0" y="-2"/></Offset></Anchor>
+								</Anchors>
+							</Texture>
+						</Layer>
+					</Layers>
+
+					<ScrollChild>
+						<EditBox name="IfThenXML_Edit_EditBox" multiLine="true" maxLines="100" letters="8100" nonspacewrap="true" spacing="1" autoFocus="true">
+							<!-- Because of how Scrollframe works we need to set a .Width and .Height -->
+							<!-- This is dynamically adjusted in the <OnSizeChanged> event of the ScrollFrame -->
+							<Size><AbsDimension x="100" y="100"/></Size>
+							<Layers>
+								<Layer level="BACKGROUND">
+									<!-- This fontString is used to estimate the width of the editbox at runtime and wether a line wraps onto another line or not. -->
+									<FontString name="IfThenXML_Edit_EditBox_LineTest" inherits="IfThenXML_Font_Edit" hidden="true">
+										<Anchor point="TOPLEFT" relativePoint="TOPLEFT"/>
+										<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT"/>
+									</FontString>
+								</Layer>
+							</Layers>
+
+							<Scripts>
+								<OnTabPressed>IfThenXML_Edit_SearchBox:SetFocus();</OnTabPressed> <!-- Focus to the searchbox  on TAB -->
+								<OnEscapePressed>IfThen:Edit_Close();</OnEscapePressed>
+								<OnTextChanged>IfThen:Edit_TextChanged(self, userInput, IfThenXML_Edit_TextCount, IfThenXML_Edit_LineNumberBox);</OnTextChanged>
+								<!-- OnUpdate and OnCursorChanged here is what makes the scrolling respond to the arrowkeys -->
+								<OnUpdate>ScrollingEdit_OnUpdate(self, elapsed, self:GetParent());</OnUpdate>
+								<OnCursorChanged function="ScrollingEdit_OnCursorChanged"/>
+								<!-- This lets us toggle topmost focus of the frame -->
+								<OnMouseDown>IfThen:ToggleFrameStrata(IfThenXML_Edit_Frame, true);</OnMouseDown>
+							</Scripts>
+
+							<FontString inherits="IfThenXML_Font_Edit"/>
+						</EditBox>
+					</ScrollChild>
+
+					<Scripts>
+						<OnSizeChanged>
+							local edt = IfThenXML_Edit_EditBox;
+							edt:SetWidth(self:GetWidth());
+							edt:SetHeight(self:GetHeight());
+						</OnSizeChanged>
+						<!-- Makes the two scrollframes work in sync -->
+						<OnVerticalScroll>IfThenXML_Edit_ScrollFrame2:SetVerticalScroll(offset);</OnVerticalScroll>
+					</Scripts>
+				</ScrollFrame>
+			</Frames>
+		</Frame>
+
+		<!-- Filter Box -->
+		<EditBox name="IfThenXML_Edit_FilterBox" inherits="IfThen_FilterBoxTemplate">
+			<Size><AbsDimension x="186" y="21"/></Size>
+			<Anchors>
+				<Anchor point="TOPRIGHT" relativeTo="IfThenXML_Edit_SubFrame" relativePoint="TOPRIGHT"><Offset><AbsDimension x="-50" y="20"/></Offset></Anchor>
+			</Anchors>
+			<Attributes>
+				<Attribute name="defaultString" type="string" value="Search &amp; highlight"/> <!-- This value is what we use instead of 'Search' -->
+			</Attributes>
+			<Scripts>
+				<OnTabPressed>IfThenXML_Edit_EditBox:SetFocus();</OnTabPressed> <!-- Focus to the editbox on TAB and ESC -->
+				<OnEscapePressed>IfThenXML_Edit_EditBox:SetFocus();</OnEscapePressed>
+				<OnTextChanged>IfThen:Edit_Filter(self);</OnTextChanged>
+			</Scripts>
+		</EditBox>
+
+
+		<!-- At the bottom of the form -->
+		<Button name="IfThenXML_Edit_MoreButton" inherits="IfThenXML_Button" text="More help...">
+			<Size><AbsDimension x="100" y="21"/></Size>
+			<Anchors>
+				<Anchor point="BOTTOMLEFT"><Offset><AbsDimension x="9" y="10"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<!-- Closes this window, saves the text, and shows the morehelp window -->
+				<OnClick>
+					IfThen:Edit_Close();
+					IfThen:Help_Open();
+				</OnClick>
+			</Scripts>
+		</Button>
+
+		<Button name="IfThenXML_Edit_CloseButton2" inherits="IfThenXML_Button" text="Close">
+			<Anchors>
+				<Anchor point="BOTTOMRIGHT"><Offset><AbsDimension x="-7" y="10"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnClick>IfThen:Edit_Close();</OnClick>
+			</Scripts>
+		</Button>
+
+		<Button name="IfThenXML_Edit_PrevPage" inherits="IfThenXML_Button" text="Previous">
+			<Anchors>
+				<Anchor point="BOTTOMRIGHT" relativeTo="IfThenXML_Edit_PageNum" relativePoint="BOTTOMLEFT"><Offset><AbsDimension x="-5" y="-3"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnClick>IfThen:Edit_ChangePage("previous");</OnClick>
+			</Scripts>
+		</Button>
+
+		<Button name="IfThenXML_Edit_NextPage" inherits="IfThenXML_Button" text="Next">
+			<Anchors>
+				<Anchor point="BOTTOMLEFT" relativeTo="IfThenXML_Edit_PageNum" relativePoint="BOTTOMRIGHT"><Offset><AbsDimension x="5" y="-3"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnClick>IfThen:Edit_ChangePage("next");</OnClick>
+			</Scripts>
+		</Button>
+
+		<!-- Search Box -->
+		<EditBox name="IfThenXML_Edit_SearchBox" inherits="IfThen_FilterBoxTemplate">
+			<Size><AbsDimension x="186" y="21"/></Size>
+			<Anchors>
+				<Anchor point="TOPLEFT" relativeTo="IfThenXML_Edit_SubFrame" relativePoint="BOTTOMLEFT"><Offset><AbsDimension x="9" y="-18"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<!-- Resizes the SearchResult box to match Subframe2 -->
+				<OnShow>
+					local sub = IfThenXML_Edit_SubFrame2;
+					local edt = IfThenXML_Edit_SearchResult;
+					edt:SetWidth(sub:GetWidth());
+					edt:SetHeight(sub:GetHeight());
+				</OnShow>
+				<OnTabPressed>IfThenXML_Edit_FilterBox:SetFocus();</OnTabPressed> <!-- Focus to the editbox on TAB and ESC -->
+				<OnEscapePressed>IfThenXML_Edit_EditBox:SetFocus();</OnEscapePressed>
+				<OnTextChanged>IfThen:Edit_Search(self, IfThenXML_Edit_SearchResult);</OnTextChanged>
+			</Scripts>
+		</EditBox>
+
+		<!-- Search Results -->
+		<Frame name="IfThenXML_Edit_SubFrame2" parent="IfThenXML_Edit_Frame">
+			<Size><AbsDimension x="500" y="40"/></Size>
+			<Anchors>
+				<Anchor point="TOP" relativeTo="IfThenXML_Edit_SubFrame" relativePoint="BOTTOM"><Offset><AbsDimension x="0" y="4"/></Offset></Anchor>
+				<Anchor point="LEFT" relativeTo="IfThenXML_Edit_SearchBox" relativePoint="RIGHT"><Offset><AbsDimension x="30" y="0"/></Offset></Anchor>
+				<Anchor point="BOTTOM" relativeTo="IfThenXML_Edit_Frame" relativePoint="BOTTOM"><Offset><AbsDimension x="0" y="3"/></Offset></Anchor>
+				<Anchor point="RIGHT" relativeTo="IfThenXML_Edit_PrevPage" relativePoint="LEFT"><Offset><AbsDimension x="-10" y="0"/></Offset></Anchor>
+			</Anchors>
+
+			<!-- This defines the outer frame texture for the frame. We dont use it because at low resolutions it looks bad -->
+			<!--
+			<Backdrop edgeFile="Interface\Buttons\UI-SliderBar-Border" tile="true">
+				<BackgroundInsets><AbsInset left="3" right="3" top="6" bottom="6" /></BackgroundInsets>
+				<TileSize><AbsValue val="16" /></TileSize>
+				<EdgeSize><AbsValue val="9" /></EdgeSize>
+			</Backdrop>
+			-->
+
+			<!-- Background for the Editbox -->
+			<!--
+			<Layers>
+				<Layer level="BACKGROUND">
+					<Texture>
+						<Color r="0" g="0" b="0" a="0.75"/>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="IfThenXML_Edit_SubFrame2" relativePoint="TOPLEFT"><Offset><AbsDimension x="3" y="-7"/></Offset></Anchor>
+							<Anchor point="BOTTOMRIGHT" relativeTo="IfThenXML_Edit_SubFrame2" relativePoint="BOTTOMRIGHT"><Offset><AbsDimension x="-4" y="7"/></Offset></Anchor>
+						</Anchors>
+					</Texture>
+				</Layer>
+			</Layers>
+			-->
+
+			<Frames>
+				<EditBox name="IfThenXML_Edit_SearchResult" multiLine="true" maxLines="3" letters="8100" nonspacewrap="true" spacing="1" enableKeyboard="false" enableMouse="false" enableMouseWheel="false" autoFocus="false">
+					<!-- Size is adjusted in the <OnShow> event of the IfThenXML_Edit_SearchBox -->
+					<Size><AbsDimension x="10" y="10"/></Size>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="IfThenXML_Edit_SubFrame2" relativePoint="TOPLEFT"><Offset><AbsDimension x="6" y="-8"/></Offset></Anchor>
+						<Anchor point="BOTTOMRIGHT" relativeTo="IfThenXML_Edit_SubFrame2" relativePoint="BOTTOMRIGHT"><Offset><AbsDimension x="-5" y="8"/></Offset></Anchor>
+					</Anchors>
+					<Scripts>
+						<OnLoad>self:SetHyperlinksEnabled(true);</OnLoad>
+						<!-- Set focus back on the searchbox -->
+						<OnEditFocusGained>IfThenXML_Edit_SearchBox:SetFocus();</OnEditFocusGained>
+						<OnMouseDown>IfThen:ToggleFrameStrata(IfThenXML_Edit_Frame, true);</OnMouseDown>
+						<OnHyperlinkClick>IfThen:HyperLink_EventHandler(link, text, button);</OnHyperlinkClick>
+					</Scripts>
+
+					<FontString inherits="IfThenXML_Font_Search"/>
+				</EditBox>
+			</Frames>
+		</Frame>
+	</Frames>
+</Frame>
+
+
+<!-- This frame holds the Help Window -->
+<!--Source: http://wow.incgamers.com/forums/showthread.php?t=375691 -->
+<Frame name="IfThenXML_Help_Frame" parent="UIParent" movable="false" resizable="false" enableKeyboard="true" enableMouseWheel="true" enableMouse="true" frameStrata="HIGH" toplevel="true" hidden="true">
+	<!-- Size is adjusted by setting anchors relative to parent -->
+	<Anchors>
+		<Anchor point="TOPLEFT"><Offset><RelDimension x="0.07" y="-0.02315"/></Offset></Anchor>
+		<Anchor point="BOTTOMRIGHT"><Offset><RelDimension x="-0.07" y="0.07"/></Offset></Anchor>
+	</Anchors>
+	<!-- Titleregion is the area where the user can click and move the frame -->
+	<TitleRegion>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT"><Offset><AbsDimension x="0" y="0"/></Offset></Anchor>
+			<Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT"><Offset><AbsDimension x="0" y="-25"/></Offset></Anchor>
+		</Anchors>
+	</TitleRegion>
+	<Scripts>
+		<OnKeyDown>if (key=="ESCAPE") then IfThen:Help_Close(); end</OnKeyDown>
+		<OnMouseDown>IfThen:ToggleFrameStrata(self, true);</OnMouseDown>
+		<OnUpdate>IfThen:ToggleFrameStrata(self, false);</OnUpdate>
+	</Scripts>
+
+	<Backdrop bgFile="Interface\TutorialFrame\TutorialFrameBackground" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+		<EdgeSize><AbsValue val="16"/></EdgeSize>
+		<TileSize><AbsValue val="32"/></TileSize>
+		<BackgroundInsets><AbsInset left="5" right="5" top="5" bottom="5"/></BackgroundInsets>
+	</Backdrop>
+
+	<!-- The info-text and form title -->
+	<Layers>
+		<Layer level="ARTWORK">
+			<!-- At the top of the form -->
+			<FontString name="IfThenXML_Help_Title" inherits="IfThenXML_Font_Title" text="IfThen: More help">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT"><Offset><AbsDimension x="10" y="-15"/></Offset></Anchor>
+				</Anchors>
+			</FontString>
+		</Layer>
+
+		<Layer level="BACKGROUND">
+			<Texture>
+				<Color r="0" g="0" b="0" a="0.70"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT"><Offset><AbsDimension x="0" y="0"/></Offset></Anchor>
+					<Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT"><Offset><AbsDimension x="0" y="0"/></Offset></Anchor>
+				</Anchors>
+			</Texture>
+		</Layer>
+	</Layers>
+
+	<Frames>
+		<!-- At the top of the form -->
+		<Button name="IfThenXML_Help_CloseButton1" inherits="UIPanelCloseButton">
+			<Anchors>
+				<Anchor point="TOPRIGHT"><Offset><AbsDimension x="-3" y="-3" /></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnClick>IfThen:Help_Close();</OnClick>
+			</Scripts>
+		</Button>
+
+
+		<!-- Search box -->
+		<EditBox name="IfThenXML_Help_SearchBox" inherits="IfThen_FilterBoxTemplate" autoFocus="true">
+			<Anchors>
+				<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT"><Offset><AbsDimension x="14" y="-40"/></Offset></Anchor>
+				<Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="TOPLEFT"><Offset><AbsDimension x="200" y="-61"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnTextChanged>IfThen:Help_Search_OnTextChanged(self, IfThenXML_Help_ScrollFrameList);</OnTextChanged>
+				<!-- SearchBox is hidden and shown again between page switches. This makes sure that the search is redone with on the proper list of arguments -->
+				<!-- Clear the searchbox if it's not empty. If it's already empty then close the frame -->
+				<OnEscapePressed>if (tostring(self:GetText())=="") then IfThen:Help_Close(); else IfThen:Help_SearchClear(self, IfThenXML_Help_SearchBoxClearButton); end</OnEscapePressed>
+			</Scripts>
+		</EditBox>
+
+
+		<!-- Inner Frame around Navigation buttons and EditBox for hyperlinks -->
+		<Frame name="IfThenXML_Help_SubFrameScroll">
+			<Anchors>
+				<Anchor point="TOPLEFT" relativeTo="IfThenXML_Help_SearchBox" relativePoint="BOTTOMLEFT"><Offset><AbsDimension x="-7" y="0"/></Offset></Anchor>
+				<Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="BOTTOMLEFT"><Offset><AbsDimension x="200" y="33"/></Offset></Anchor>
+			</Anchors>
+
+			<Frames>
+				<!-- Navigation buttons and Editbox for hyperlinks> -->
+				<Button name="IfThenXML_Help_PrevButton" inherits="IfThenXML_Button" text="Prev...">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT"><Offset><AbsDimension x="1" y="-5"/></Offset></Anchor>
+					</Anchors>
+					<Scripts>
+						<OnClick>IfThen:Help_Navigate("previous");</OnClick>
+					</Scripts>
+				</Button>
+
+				<Button name="IfThenXML_Help_NextButton" inherits="IfThenXML_Button" text="Next...">
+					<Anchors>
+						<Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT"><Offset><AbsDimension x="-1" y="-5"/></Offset></Anchor>
+					</Anchors>
+					<Scripts>
+						<OnClick>IfThen:Help_Navigate("next");</OnClick>
+					</Scripts>
+				</Button>
+
+				<EditBox name="IfThenXML_Help_ScrollFrameList" multiLine="true" maxLines="1000" letters="8100" nonspacewrap="false" spacing="1" enableKeyboard="false" enableMouse="true" enableMouseWheel="true" autoFocus="false">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="IfThenXML_Help_PrevButton" relativePoint="BOTTOMLEFT"><Offset><AbsDimension x="3" y="-15"/></Offset></Anchor>
+						<Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT"><Offset><AbsDimension x="-3" y="15"/></Offset></Anchor>
+					</Anchors>
+
+					<Scripts>
+						<OnLoad>self:SetHyperlinksEnabled(true);</OnLoad>
+						<!-- Set focus back on the searchbox -->
+						<OnEditFocusGained>IfThenXML_Help_SearchBox:SetFocus();</OnEditFocusGained>
+						<OnHyperlinkClick>IfThen:Help_OnHyperlinkShow(self, link, text, button);</OnHyperlinkClick>
+					</Scripts>
+
+					<FontString inherits="IfThenXML_Font_Search"/>
+				</EditBox>
+			</Frames>
+		</Frame>
+
+
+		<!-- Inner frame around the ScrollFrame and EditBox -->
+		<Frame name="IfThenXML_Help_SubFrame">
+			<Anchors>
+				<Anchor point="TOPLEFT" relativeTo="IfThenXML_Help_SearchBox" relativePoint="TOPRIGHT"><Offset><AbsDimension x="2" y="3"/></Offset></Anchor>
+				<!-- The TOPLEFT anchor gets replaced in code with a anchor to $parent if the IfThenXML_Help_SearchBox is not visible -->
+				<!-- <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT"><Offset><AbsDimension x="14" y="-40"/></Offset></Anchor> -->
+				<Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT"><Offset><AbsDimension x="-5" y="33"/></Offset></Anchor>
+			</Anchors>
+
+			<!-- This defines the outer frame texture for the scrollframe -->
+			<Backdrop bgFile="Interface\ChatFrame\ChatFrameBackground" edgeFile="Interface\Buttons\UI-SliderBar-Border" tile="true">
+				<BackgroundInsets><AbsInset left="3" right="3" top="6" bottom="6" /></BackgroundInsets>
+				<TileSize><AbsValue val="16" /></TileSize>
+				<EdgeSize><AbsValue val="9" /></EdgeSize>
+			</Backdrop>
+
+			<Frames>
+				<ScrollFrame name="IfThenXML_Help_ScrollFrame" inherits="UIPanelScrollFrameTemplate">
+					<Anchors>
+						<Anchor point="TOPLEFT"><Offset><AbsDimension x="6" y="-12"/></Offset></Anchor>
+						<Anchor point="BOTTOMRIGHT"><Offset><AbsDimension x="-26" y="8"/></Offset></Anchor>
+					</Anchors>
+
+					<Layers>
+						<!-- Background for the Slider -->
+						<Layer level="BORDER">
+							<Texture file="Interface\ChatFrame\ChatFrameBackground">
+								<Gradient>
+									<MinColor r="0.1" g="0.1" b="0.1"/>
+									<MaxColor r="0" g="0" b="0"/>
+								</Gradient>
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="IfThenXML_Help_ScrollFrame" relativePoint="TOPRIGHT"><Offset><AbsDimension x="0" y="6"/></Offset></Anchor>
+									<Anchor point="BOTTOMRIGHT" relativeTo="IfThenXML_Help_ScrollFrame" relativePoint="BOTTOMRIGHT"><Offset><AbsDimension x="23" y="-2"/></Offset></Anchor>
+								</Anchors>
+							</Texture>
+						</Layer>
+
+						<!-- Background for the Editbox -->
+						<Layer level="BACKGROUND">
+							<Texture name="IfThenXML_Help_SubFrame_Simple_Background">
+								<Color r="0" g="0" b="0" a="1"/>
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="IfThenXML_Help_ScrollFrame" relativePoint="TOPLEFT"><Offset><AbsDimension x="-5" y="6"/></Offset></Anchor>
+									<Anchor point="BOTTOMRIGHT" relativeTo="IfThenXML_Help_ScrollFrame" relativePoint="BOTTOMRIGHT"><Offset><AbsDimension x="0" y="-2"/></Offset></Anchor>
+								</Anchors>
+							</Texture>
+						</Layer>
+					</Layers>
+
+					<ScrollChild>
+						<EditBox name="IfThenXML_Help_EditBox" multiLine="true" maxLines="1000" letters="0" nonspacewrap="true" spacing="1" autoFocus="false">
+							<!-- Because of how Scrollframe works we need to set a .Width and .Height -->
+							<!-- This is dynamically adjusted in the <OnSizeChanged> event of the ScrollFrame -->
+							<Size><AbsDimension x="100" y="100"/></Size>
+							<Scripts>
+								<OnLoad>self:SetHyperlinksEnabled(true);</OnLoad>
+								<OnEscapePressed>IfThen:Help_Close();</OnEscapePressed>
+								<!-- OnUpdate and OnCursorChanged here is what makes the scrolling respond to the arrowkeys -->
+								<OnUpdate>ScrollingEdit_OnUpdate(self, elapsed, self:GetParent());</OnUpdate>
+								<OnCursorChanged function="ScrollingEdit_OnCursorChanged"/>
+								<!-- This lets us toggle topmost focus of the frame -->
+								<OnMouseDown>IfThen:ToggleFrameStrata(IfThenXML_Help_Frame, true);</OnMouseDown>
+								<OnHyperlinkClick>IfThen:HyperLink_EventHandler(link, text, button);</OnHyperlinkClick>
+							</Scripts>
+							<FontString inherits="IfThenXML_Font_Help"/>
+						</EditBox>
+					</ScrollChild>
+
+					<Scripts>
+						<OnSizeChanged>
+							local edt = IfThenXML_Help_EditBox;
+							edt:SetWidth(self:GetWidth());
+							edt:SetHeight(self:GetHeight());
+						</OnSizeChanged>
+					</Scripts>
+				</ScrollFrame>
+			</Frames>
+		</Frame>
+
+
+		<!-- At the bottom of the form -->
+		<Button name="IfThenXML_Help_EditButton" inherits="IfThenXML_Button" text="Edit...">
+			<Anchors>
+				<Anchor point="BOTTOMLEFT"><Offset><AbsDimension x="12" y="10"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<!-- Closes this window, saves the text, and shows the morehelp window -->
+				<OnClick>
+					IfThen:Help_Close();
+					IfThen:Edit_Open();
+				</OnClick>
+			</Scripts>
+		</Button>
+
+		<Button name="IfThenXML_Help_Button_Syntax" inherits="IfThenXML_Button" text="Syntax">
+			<Anchors>
+				<Anchor point="BOTTOMLEFT" relativeTo="IfThenXML_Help_EditButton" relativePoint="BOTTOMRIGHT"><Offset><AbsDimension x="60" y="0"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnClick>IfThen:Help_Open("syntax");</OnClick>
+			</Scripts>
+		</Button>
+
+		<Button name="IfThenXML_Help_Button_MacroStart" inherits="IfThenXML_Button" text="MacroStart">
+			<Anchors>
+				<Anchor point="BOTTOMLEFT" relativeTo="IfThenXML_Help_Button_Syntax" relativePoint="BOTTOMRIGHT"><Offset><AbsDimension x="6" y="0"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnClick>IfThen:Help_Open("macrostart");</OnClick>
+			</Scripts>
+		</Button>
+
+		<Button name="IfThenXML_Help_Button_Arguments" inherits="IfThenXML_Button" text="Arguments">
+			<Anchors>
+				<Anchor point="BOTTOMLEFT" relativeTo="IfThenXML_Help_Button_MacroStart" relativePoint="BOTTOMRIGHT"><Offset><AbsDimension x="5" y="0"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnClick>IfThen:Help_Open("argument");</OnClick>
+			</Scripts>
+		</Button>
+
+		<Button name="IfThenXML_Help_Button_Actions" inherits="IfThenXML_Button" text="Actions">
+			<Anchors>
+				<Anchor point="BOTTOMLEFT" relativeTo="IfThenXML_Help_Button_Arguments" relativePoint="BOTTOMRIGHT"><Offset><AbsDimension x="5" y="0"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnClick>IfThen:Help_Open("action");</OnClick>
+			</Scripts>
+		</Button>
+
+		<Button name="IfThenXML_Help_Button_Events" inherits="IfThenXML_Button" text="Events">
+			<Anchors>
+				<Anchor point="BOTTOMLEFT" relativeTo="IfThenXML_Help_Button_Actions" relativePoint="BOTTOMRIGHT"><Offset><AbsDimension x="5" y="0"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnClick>IfThen:Help_Open("event");</OnClick>
+			</Scripts>
+		</Button>
+
+		<Button name="IfThenXML_Help_Button_Variables" inherits="IfThenXML_Button" text="Variables">
+			<Anchors>
+				<Anchor point="BOTTOMLEFT" relativeTo="IfThenXML_Help_Button_Events" relativePoint="BOTTOMRIGHT"><Offset><AbsDimension x="5" y="0"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnClick>IfThen:Help_Open("variable");</OnClick>
+			</Scripts>
+		</Button>
+
+		<Button name="IfThenXML_Help_Button_Settings" inherits="IfThenXML_Button" text="Settings">
+			<Anchors>
+				<Anchor point="BOTTOMLEFT" relativeTo="IfThenXML_Help_Button_Variables" relativePoint="BOTTOMRIGHT"><Offset><AbsDimension x="25" y="0"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnClick>IfThen:Help_Open("settings");</OnClick>
+			</Scripts>
+		</Button>
+
+		<Button name="IfThenXML_Help_CloseButton2" inherits="IfThenXML_Button" text="Close">
+			<Anchors>
+				<Anchor point="BOTTOMRIGHT"><Offset><AbsDimension x="-7" y="10"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnClick>IfThen:Help_Close();</OnClick>
+			</Scripts>
+		</Button>
+	</Frames>
+</Frame>
+
+
+<!-- This frame holds the Addon options Window -->
+<!--Source: http://www.wowwiki.com/Using_the_Interface_Options_Addons_panel -->
+<Frame name="IFThenXML_Settings_Frame" parent="InterfaceOptionsFramePanelContainer">
+	<Scripts>
+		<OnLoad>IfThen:SettingsFrame_OnLoad(self, IFThenXML_Settings_Frame_Title);</OnLoad>
+	</Scripts>
+
+	<Layers>
+		<Layer level="ARTWORK">
+			<!-- At the top of the form -->
+			<FontString name="IFThenXML_Settings_Frame_Title" inherits="IfThenXML_Font_Title" text="IfThen: X.Y.Z">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT"><Offset><AbsDimension x="10" y="-20"/></Offset></Anchor>
+				</Anchors>
+			</FontString>
+
+			<FontString name="IFThenXML_Settings_Frame_Info1" inherits="SystemFont_Outline_Small" justifyH="LEFT" text="Use the checkboxes to Enable/Disable the settings.">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="IFThenXML_Settings_Frame_Title" relativePoint="BOTTOMLEFT"><Offset><AbsDimension x="10" y="-10"/></Offset></Anchor>
+					<!-- This anchor is to make sure we dont overflow the frame's edge with text -->
+					<Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT"><Offset><AbsDimension x="-10" y="0"/></Offset></Anchor>
+				</Anchors>
+			</FontString>
+
+			<FontString name="IFThenXML_Settings_Frame_Info2" inherits="SystemFont_Outline_Small" justifyH="LEFT" text="(*)Some settings require you to /reload the UI before they take effect.">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="IFThenXML_Settings_Frame_Info1" relativePoint="BOTTOMLEFT"><Offset><AbsDimension x="0" y="-8"/></Offset></Anchor>
+					<Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT"><Offset><AbsDimension x="-10" y="0"/></Offset></Anchor>
+				</Anchors>
+			</FontString>
+
+			<FontString name="IFThenXML_Settings_Frame_Info3" inherits="SystemFont_Outline_Small" justifyH="LEFT" text="All of these options are available using the /ifthen and /ift slash-commands.">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="IFThenXML_Settings_Frame_Info2" relativePoint="BOTTOMLEFT"><Offset><AbsDimension x="0" y="-8"/></Offset></Anchor>
+					<Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT"><Offset><AbsDimension x="-10" y="0"/></Offset></Anchor>
+				</Anchors>
+			</FontString>
+		</Layer>
+	</Layers>
+
+	<Frames>
+		<Button name="IFThenXML_Settings_Frame_Btn_Version" inherits="IfThenXML_Button" text="Versioncheck...">
+			<Size><AbsDimension x="150" y="22"/></Size>
+			<Anchors>
+				<Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT"><Offset><AbsDimension x="-25" y="-20"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnClick>IfThen:Slash("version");</OnClick>
+			</Scripts>
+		</Button>
+
+		<CheckButton name="IFThenXML_Settings_Frame_Chk_Spellcheck" inherits="ChatConfigCheckButtonTemplate">
+			<Anchors>
+				<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT"><Offset><AbsDimension x="15" y="-125"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnShow>
+					if (IfThen:GetCurrentSetting("Spellcheck") == true) then self:SetChecked(true); else self:SetChecked(false); end;
+					_G[self:GetName().."Text"]:SetText("Spellcheck feature(*)");
+				</OnShow>
+				<OnClick>
+					self:SetChecked(self:GetChecked());
+					IfThen:Slash("Spellcheck");
+				</OnClick>
+			</Scripts>
+		</CheckButton>
+
+		<CheckButton name="IFThenXML_Settings_Frame_Chk_Minimal" inherits="ChatConfigCheckButtonTemplate">
+			<Anchors>
+				<Anchor point="TOPLEFT" relativeTo="IFThenXML_Settings_Frame_Chk_Spellcheck" relativePoint="TOPLEFT"><Offset><AbsDimension x="0" y="-20"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnShow>
+					if (IfThen:GetCurrentSetting("Minimal") == true) then self:SetChecked(true) else self:SetChecked(false) end;
+					_G[self:GetName().."Text"]:SetText("Minimal feature(*)");
+				</OnShow>
+				<OnClick>
+					self:SetChecked(self:GetChecked());
+					IfThen:Slash("Minimal");
+				</OnClick>
+			</Scripts>
+		</CheckButton>
+
+		<CheckButton name="IFThenXML_Settings_Frame_Chk_Color" inherits="ChatConfigCheckButtonTemplate">
+			<Anchors>
+				<Anchor point="TOPLEFT" relativeTo="IFThenXML_Settings_Frame_Chk_Minimal" relativePoint="TOPLEFT"><Offset><AbsDimension x="0" y="-20"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnShow>
+					if (IfThen:GetCurrentSetting("Color") == true) then self:SetChecked(true) else self:SetChecked(false) end;
+					_G[self:GetName().."Text"]:SetText("Syntax color feature");
+				</OnShow>
+				<OnClick>
+					self:SetChecked(self:GetChecked());
+					IfThen:Slash("Color");
+				</OnClick>
+			</Scripts>
+		</CheckButton>
+
+
+		<CheckButton name="IFThenXML_Settings_Frame_Chk_EasyCast" inherits="ChatConfigCheckButtonTemplate">
+			<Anchors>
+				<Anchor point="TOPLEFT" relativeTo="IFThenXML_Settings_Frame_Chk_Color" relativePoint="TOPLEFT"><Offset><AbsDimension x="0" y="-20"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnShow>
+					if (IfThen:GetCurrentSetting("EasyCast") == true) then self:SetChecked(true) else self:SetChecked(false) end;
+					_G[self:GetName().."Text"]:SetText("EasyCast feature");
+				</OnShow>
+				<OnClick>
+					self:SetChecked(self:GetChecked());
+					IfThen:Slash("EasyCast");
+				</OnClick>
+			</Scripts>
+		</CheckButton>
+
+		<CheckButton name="IFThenXML_Settings_Frame_Chk_LineNumber" inherits="ChatConfigCheckButtonTemplate">
+			<Anchors>
+				<Anchor point="TOPLEFT" relativeTo="IFThenXML_Settings_Frame_Chk_EasyCast" relativePoint="TOPLEFT"><Offset><AbsDimension x="0" y="-20"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnShow>
+					if (IfThen:GetCurrentSetting("LineNumber") == true) then self:SetChecked(true) else self:SetChecked(false) end;
+					_G[self:GetName().."Text"]:SetText("Line numbers");
+				</OnShow>
+				<OnClick>
+					self:SetChecked(self:GetChecked());
+					IfThen:Slash("LineNumber");
+				</OnClick>
+			</Scripts>
+		</CheckButton>
+
+		<CheckButton name="IFThenXML_Settings_Frame_Chk_OnEvent" inherits="ChatConfigCheckButtonTemplate">
+			<Anchors>
+				<Anchor point="TOPLEFT" relativeTo="IFThenXML_Settings_Frame_Chk_LineNumber" relativePoint="TOPLEFT"><Offset><AbsDimension x="0" y="-20"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnShow>
+					if (IfThen:GetCurrentSetting("OnEvent") == true) then self:SetChecked(true); else self:SetChecked(false); end;
+					_G[self:GetName().."Text"]:SetText("OnEvent feature");
+				</OnShow>
+				<OnClick>
+					self:SetChecked(self:GetChecked());
+					IfThen:Slash("OnEvent");
+				</OnClick>
+			</Scripts>
+		</CheckButton>
+
+		<CheckButton name="IFThenXML_Settings_Frame_Chk_ExtraSlash" inherits="ChatConfigCheckButtonTemplate">
+			<Anchors>
+				<Anchor point="TOPLEFT" relativeTo="IFThenXML_Settings_Frame_Chk_OnEvent" relativePoint="TOPLEFT"><Offset><AbsDimension x="0" y="-20"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnShow>
+					if (IfThen:GetCurrentSetting("ExtraSlash") == true) then self:SetChecked(true); else self:SetChecked(false); end;
+					_G[self:GetName().."Text"]:SetText("ExtraSlash feature(*)");
+				</OnShow>
+				<OnClick>
+					self:SetChecked(self:GetChecked());
+					IfThen:Slash("ExtraSlash");
+				</OnClick>
+			</Scripts>
+		</CheckButton>
+
+		<CheckButton name="IFThenXML_Settings_Frame_Chk_GetQuest" inherits="ChatConfigCheckButtonTemplate">
+			<Anchors>
+				<Anchor point="TOPLEFT" relativeTo="IFThenXML_Settings_Frame_Chk_ExtraSlash" relativePoint="TOPLEFT"><Offset><AbsDimension x="0" y="-20"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnShow>
+					if (IfThen:GetCurrentSetting("GetQuest") == true) then self:SetChecked(true); else self:SetChecked(false); end;
+					_G[self:GetName().."Text"]:SetText("GetQuest feature");
+				</OnShow>
+				<OnClick>
+					self:SetChecked(self:GetChecked());
+					IfThen:Slash("GetQuest");
+				</OnClick>
+			</Scripts>
+		</CheckButton>
+
+		<CheckButton name="IFThenXML_Settings_Frame_Chk_MacroRefresh" inherits="ChatConfigCheckButtonTemplate">
+			<Anchors>
+				<Anchor point="TOPLEFT" relativeTo="IFThenXML_Settings_Frame_Chk_GetQuest" relativePoint="TOPLEFT"><Offset><AbsDimension x="0" y="-20"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnShow>
+					if (IfThen:GetCurrentSetting("MacroRefresh") == true) then self:SetChecked(true); else self:SetChecked(false); end;
+					_G[self:GetName().."Text"]:SetText("MacroRefresh feature");
+				</OnShow>
+				<OnClick>
+					self:SetChecked(self:GetChecked());
+					IfThen:Slash("MacroRefresh");
+				</OnClick>
+			</Scripts>
+		</CheckButton>
+
+		<CheckButton name="IFThenXML_Settings_Frame_Chk_Shift" inherits="ChatConfigCheckButtonTemplate">
+			<Anchors>
+				<Anchor point="TOPLEFT" relativeTo="IFThenXML_Settings_Frame_Chk_MacroRefresh" relativePoint="TOPLEFT"><Offset><AbsDimension x="0" y="-20"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnShow>
+					if (IfThen:GetCurrentSetting("Shift") == true) then self:SetChecked(true); else self:SetChecked(false); end;
+					_G[self:GetName().."Text"]:SetText("Shift feature");
+				</OnShow>
+				<OnClick>
+					self:SetChecked(self:GetChecked());
+					IfThen:Slash("Shift");
+				</OnClick>
+			</Scripts>
+		</CheckButton>
+
+		<CheckButton name="IFThenXML_Settings_Frame_Chk_Debug" inherits="ChatConfigCheckButtonTemplate" hidden="true"> <!-- Debug is not visible -->
+			<Anchors>
+				<Anchor point="TOPLEFT" relativeTo="IFThenXML_Settings_Frame_Chk_Shift" relativePoint="TOPLEFT"><Offset><AbsDimension x="0" y="-20"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnShow>
+					if (IfThen:GetCurrentSetting("Debug") > 0) then self:SetChecked(true); else self:SetChecked(false); end;
+					_G[self:GetName().."Text"]:SetText("Debug feature.");
+				</OnShow>
+				<OnClick>
+					self:SetChecked(self:GetChecked());
+					IfThen:Slash("Debug");
+				</OnClick>
+			</Scripts>
+		</CheckButton>
+
+		<Button name="IFThenXML_Settings_Frame_Btn_Setting" inherits="IfThenXML_Button" text="More info...">
+			<Size><AbsDimension x="180" y="22"/></Size>
+			<Anchors>
+				<Anchor point="TOPLEFT" relativeTo="IFThenXML_Settings_Frame_Chk_EasyCast" relativePoint="TOPLEFT"><Offset><AbsDimension x="230" y="0"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnClick>
+					--if (false and InterfaceOptionsFrame ~= nil) then InterfaceOptionsFrame:Hide(); end
+					--if (false and GameMenuFrame ~= nil) then GameMenuFrame:Hide(); end
+					IfThen:Help_Open("settings");
+				</OnClick>
+			</Scripts>
+		</Button>
+
+		<Button name="IFThenXML_Settings_Frame_Btn_Edit" inherits="IfThenXML_Button" text="Edit window...">
+			<Size><AbsDimension x="180" y="22"/></Size>
+			<Anchors>
+				<Anchor point="TOPLEFT" relativeTo="IFThenXML_Settings_Frame_Chk_Debug" relativePoint="TOPLEFT"><Offset><AbsDimension x="0" y="-100"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnClick>IfThen:Edit_Open();</OnClick>
+			</Scripts>
+		</Button>
+
+		<Button name="IFThenXML_Settings_Frame_Btn_MoreHelp" inherits="IfThenXML_Button" text="More help...">
+			<Size><AbsDimension x="180" y="22"/></Size>
+			<Anchors>
+				<Anchor point="TOPLEFT" relativeTo="IFThenXML_Settings_Frame_Btn_Edit" relativePoint="TOPLEFT"><Offset><AbsDimension x="0" y="-30"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnClick>IfThen:Help_Open();</OnClick>
+			</Scripts>
+		</Button>
+
+		<Button name="IFThenXML_Settings_Frame_Btn_Macro" inherits="IfThenXML_Button" text="Reset macro">
+			<Size><AbsDimension x="180" y="22"/></Size>
+			<Anchors>
+				<Anchor point="TOPLEFT" relativeTo="IFThenXML_Settings_Frame_Btn_MoreHelp" relativePoint="TOPLEFT"><Offset><AbsDimension x="0" y="-50"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnClick>IfThen:Slash("macro");</OnClick>
+			</Scripts>
+		</Button>
+
+		<Button name="IFThenXML_Settings_Frame_Btn_Refresh" inherits="IfThenXML_Button" text="Manual refresh">
+			<Size><AbsDimension x="180" y="22"/></Size>
+			<Anchors>
+				<Anchor point="TOPLEFT" relativeTo="IFThenXML_Settings_Frame_Btn_Macro" relativePoint="TOPLEFT"><Offset><AbsDimension x="190" y="0"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnClick>IfThen:Slash("refresh");</OnClick>
+			</Scripts>
+		</Button>
+
+		<Button name="IFThenXML_Settings_Frame_Btn_ReloadUI" inherits="IfThenXML_ButtonSpecial" text="Reload UI">
+			<Size><AbsDimension x="180" y="22"/></Size>
+			<Anchors>
+				<Anchor point="TOPLEFT" relativeTo="IFThenXML_Settings_Frame_Btn_Refresh" relativePoint="TOPLEFT"><Offset><AbsDimension x="190" y="0"/></Offset></Anchor>
+			</Anchors>
+			<Scripts>
+				<OnClick>ConsoleExec("reloadui");</OnClick>
+			</Scripts>
+		</Button>
+	</Frames>
+</Frame>
+
+</Ui>

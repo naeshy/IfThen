@@ -1,0 +1,761 @@
+IfThen - Changelog
+
+Version	2.0.8	(2017-01-31)		-Wow patch 7.1.5
+	BugFix:
+		OnEvent(UIError) will now trigger properly when inputting a text to match (reported by Louth).
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	2.0.7	(2016-11-09)		-Wow patch 7.1.0
+	BugFix:
+		HaveTalent() will no longer cause lua error when PvP argument is omitted (reported by Spodi2290).
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	2.0.6	(2016-10-26)		-Wow patch 7.1.0
+	General:
+		Updated .TOC for WOW patch 7.1.0
+		The morehelp window has been redesigned. This is due to UI-changes in patch 7.1 by Blizzard.
+	Removed functions:
+		DBMRange()
+	Updated functions:
+		HasBuff() now has an optional OP argument.
+		Added a shorthand alias to the PlayAudio() function: "Headless".
+		Report(), PlayerHasMoved() has updated documentation.
+	Updated variables:
+		%playerCoordinates%, %playerLocation% has updated documentation.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	2.0.5	(2016-10-07)		-Wow patch 7.0.3
+	BugFix:
+		HasBuff() will now also work with capitalized or uppercase input.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	2.0.4	(2016-09-29)		-Wow patch 7.0.3
+	Updated functions:
+		HasBuff() will now return true if your target has an buff/debuff/aura/ability on them with the specified name. It will not consider the harmful/helpful nature of it (reported by yoloswaggger).
+		Report() no longer support "debuff" argument. Use "buff" instead.
+	Removed funcions:
+		HasDeBuff() is merged with HasBuff().
+	BugFix:
+		Fixed some typos in the documentaion.
+		Macro should now change to the correct icon when used with ClickActionBar()
+		Fixed lua error in Methods:isInstanceInEncounterJournal()
+		Methods:getNPCNameFromGUID() will no longer print diagnostic info.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	2.0.3	(2016-08-29)		-Wow patch 7.0.3
+	New events:
+		LevelUp (request by Cecile_Curse)
+	New functions:
+		SetTitle()
+		SummonMount()
+		SummonPet()
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	2.0.2	(2016-08-11)		-Wow patch 7.0.3
+	New functions:
+		OpenTradeSkill()
+		CloseTradeSkill()
+		IsTradeSkillReady()
+		Craft() allows you to craft an item (request by TaraNTino).
+	BugFix:
+		IfThen macro will now update its icon properly.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	2.0.1	(2016-08-04)		-Wow patch 7.0.3
+	General:
+		Improved clicking a quest/achievement in the objectives tracker while the edit window is open to copy it's name.
+		LibDataBroker integration updated to show tooltiptext and use textureID's instead of texture-strings.
+	BugFix:
+		IfThen macro will now update its icon properly when using Toybox items. This is a workaround for a Blizzard bug.
+		DBMRange() works again.
+		InWorgenForm() works again. You can now also get a result when targeting NPC's.
+		IsTapped() works again.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	2.0.0	(2016-07-15)		-Wow patch 7.0.3
+	General:
+		Updated .TOC for WOW patch 7.0.3
+		Removed support for Voice Encounter Mods (VEM).
+		Removed support for glyph links.
+		FAQ.txt and Examples.txt updated.
+		You can now click on a quest/achievement in the objectives tracker while the edit window is open to copy it's name.
+	New functions:
+		IsCurrentSpec() replaces IsCurrentTalentSpec() that has been removed.
+		EnableSpec() replaces EnableTalentSpec() that has been removed.
+	Updated functions:
+		Print() and RaidMessage() now supports 'DemonHunter' as a color argument.
+		IsClass() added 'Demonhunter' as an input argument.
+		HasPower() rewritten and merged with HavePowerpoints().
+		HaveTalent() added an optional PvP-agument to check for Honor talents.
+		Report()
+			Removed "health" and "power" options.
+			Documentation page does no longer show the "pvpgear" info. This feature was removed back in version 1.9.3
+	Updated variables:
+		%playerpowertype%, %targetpowertype%, %focuspowertype%, %petpowertype% should now support powertypes for all classes.
+	Removed functions:
+		HaveGlyph() since glyphs are no longer in game.
+		IsCurrentTalentTree()
+		IsCurrentTalentSpec() is removed. Use IsCurrentSpec() instead.
+		EnableTalentSpec() is removed. Use EnableSpec() instead.
+		HavePowerPoints() is removed use HasPower() instead.
+	BugFix:
+		Print(), Message() and RaidMessage() will now show raid marker icons instead of text strings.
+		ClickActionBar() now works as it should with "Extra" as input argument.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.9.9	(2016-03-23)		-Wow patch 6.2.4
+	General:
+		Updated to support changes in Battle.net's infrastructure.
+		Removed CHAT_MSG_BN_CONVERSATION since support for conversations has been removed.
+	Bugfix:
+		Reputation lookup should no longer output debug strings in chat.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.9.8	(2015-08-21)		-Wow patch 6.2.0
+	New functions:
+		InWorgenForm() returns true/false if you are a worgen (race) thats currently in worgen-form (request by rui).
+	Bugfix:
+		Reputation lookup for Bodyguards/Friends should work again.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.9.7	(2015-07-09)		-Wow patch 6.2.0
+	General:
+		Updated .TOC for WOW patch 6.2.0
+	Updated variables:
+		%InstanceDifficulty% now works with the new Timewalking and Mythic dungeon difficulty settings.
+	Bugfix:
+		Screenshot() function is now working again.
+		Syntaxcoloring should now close windows when toggeled on/off.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.9.6	(2015-05-23)		-Wow patch 6.1.2
+	Updated functions:
+		HavePowerPoint() now supports combo-points for Druids in Feral spec (code provided by mcbobbo).
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.9.5	(2015-03-28)		-Wow patch 6.1.2
+	New functions:
+		SetSound() Enable/Disable all sound, effects or music ingame (request by baldricinoz).
+		HaveProfession()
+	Updated functions:
+		IsMuted() input argument 'both' removed. Now support 'all' so it's consistent with SetSound().
+	Bugfix:
+		Will no longer output debug info from LFG_LIST_APPLICATION_STATUS_UPDATED.
+		The edit and morehelp window will no longer hide behind other windows just by mousing over another frame.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.9.4	(2015-02-27)		-Wow patch 6.1.0
+	Bugfix:
+		Will no longer cause taint-error from the Blizzard_SocialUI.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.9.3	(2015-02-24)		-Wow patch 6.1.0
+	General:
+		Updated .TOC for WOW patch 6.1.0
+		Keybindings are now found under the "Addons" category instead of "Other".
+	Updated events:
+		LFGInvite will now also trigger on invitations from the Premade groups tool.
+	Updated functions:
+		PlayAudio() added a few sounds like Hans'gars "I'll be back".
+		Report() will now query the server for the latest savedinstance info before outputting data.
+		InLFGQueue() does no longer support 'lfr' and 'flex' as input arguments since these are no longer ingame.
+	New functions:
+		StopAllSound()
+	Removed functions:
+		HavePVPEquipped()
+		Report() does no longer support the "pvpgear" option.
+	New variables:
+		%StatToys%
+	Bugfix:
+		PlayAudio() All shorthand aliases for soundfiles are now working again (pointed to .wav instead of .ogg).
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.9.2	(2014-10-26)		-Wow patch 6.0.2
+	Bugfix:
+		IsQuestCompleted() will no longer crash.
+		Internal function getNPCNameFromGUID() will no longe spam debug messages.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.9.1	(2014-10-13)		-Wow patch 6.0.2
+	General:
+		Updated .TOC for WOW patch 6.0.2
+		Many internal Blizzard functions have got their return values changed from 0/1/nil into true/false.
+		Functions that hook into 'Deadly Boss Mods' (DBM) will now also work with 'Voice Encounter Mods' (VEM): DBMRange(), DBMTimer(), DBMPull(), %BossName%, IsBoss()
+		Shift clicking a quest in the questlog or objectives tracker is removed. It will no longer paste the questname into the text editor.
+	Updated functions:
+		HaveCritter() will now return true only if a critter is summoned.
+		IsFlyableArea() - Even though the function can return true. You as a player might not be able to fly in the area. That is dependent on your flying skill ability among other things.
+	New functions:
+		IsQuestCompleted()
+	Updated variables:
+		%InstanceDifficulty% now also returns "Mythic" as a possible value.
+		%PlayerMark%, %TargetMark%, %FocusMark% and %PetMark% will now appear correct in chat with non-english clients.
+	Removed variables:
+		%GuildLevel% has been removed since guild levels are no more.
+	Bugfix:
+		HasTempWeaponEnchant() should now work for offhand enchants.
+		The text-cursor should no longer jump around if you type non-english charaters (like ü, ë and so on) while Syntaxcoloring is enabled (reported by chamann81).
+		Fixed error when OnEvent's were disabled.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.9.0	(2014-03-23)		-Wow patch 5.4.7
+	New variables:
+		%EnabledEquipmentSet% (request by baldricinoz)
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.8.9	(2014-03-18)		-Wow patch 5.4.7
+	Bugfix:
+		The events Chat(), GroupInvite() and RoleCheck() will not require their "Player" argument to be written in the "Playername-Servername" format to be correctly matched. "Playername" is enough.
+		Messages about "Deadly Boss Mods" not loaded at login/reload should no longer appear if you have the addon installed, but disabled.
+	New functions:
+		IsAddonLoaded()
+	New variables:
+		%BattleTag%
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.8.8	(2013-10-16)		-Wow patch 5.4.0
+	Bugfix:
+		Fixed error regarding DBM's SetMainBossID() function after doing a /reload while inside a raid instance.
+		%BossName% should no longer sometimes return the string 'worldboss'.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.8.7	(2013-10-14)		-Wow patch 5.4.0
+	New functions:
+		DBMPull() - Start a DBM pull-timer.
+		IsClassified() - Lets you check the classification of a unit (worldboss, rare, elite etc).
+	Updated functions:
+		ClickActionBar() - The code will now try to use the icon for the specified button instead of the default IfThen icon.
+		IsBoss() - Argument is now optional. Will now also check unitname against the enounter journal and DBM like %BossName% does.
+	New variables:
+		%BossName% - The name of the boss you are currently in combat with (request by 0xygen).
+		%DeathName%, %DeathSpell%, %DeathAmount%, %DeathOverkill% - The name, ability and amount of damage that last killed the player (request by 0xygen).
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.8.6	(2013-09-17)		-Wow patch 5.4.0
+	General:
+		Removed backwards-compatible code for patch 5.3.0
+	Bugfix:
+		Report() now reacts to the "all" keyword as before when asking about saved instances.
+		Report() will only output titles for party-dungeons since their links are trashed by the chat system (raid will still output links)
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.8.5	(2013-09-09)		-Wow patch 5.4.0
+	General:
+		Updated .TOC for WOW patch 5.4.0
+		Some of the changes will only be visible when running version 5.4.x of WoW.
+	New functions:
+		InDigsite()
+		InWargame()
+	Updated functions:
+		Report() - Added a "world" argument for the "savedinstance" option. This will list all world-bosses you have killed.
+		InLFGQueue() - Added "flex" as an argument.
+		Added a few more shorthand aliases to the PlayAudio() function. "Ding", "Heads roll", "Not prepared", "Bonestorm", "You fail".
+	Updated variables:
+		%InstanceDifficulty% can now also return "Heroic Scenario" and "Flexible".
+	Bugfix:
+		%InstanceDifficulty% should now return the correct difficulty (Normal/Heroic) for your current instance.
+		Fixed various "See also" links in documentation that should now point to the correct page.
+	Code optimizations:
+		Changes made to Documentation & Parsing that should reduce memory footprint of the addon (about 3KB less).
+		Merged some identical event-handlers to reduce memory footprint even more.
+		Rewritten event handlers to no longer wrap arguments into tables. This should reduce memory consumed at runtime.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.8.4	(2013-06-07)		-Wow patch 5.3.0
+	General:
+		Removed the "PlayAudio" window. This feature is now embedded in the documentation page for PlayAudio().
+	Documentation:
+		The documentation page of PlayAudio() will now list all shorthand aliases with clickable links to play the sounds.
+	Bugfix:
+		Addon will no longer trigger errors due to tainting Blizzards UIDropDownMenu (reported by Caraxe).
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.8.3	(2013-06-01)		-Wow patch 5.3.0
+	New events:
+		Added "DuelStart" and "DuelEnd" that is triggered when a duel is requested or finished (requested by Camocanine).
+	New functions:
+		DuelAccept(), DuelDecline().
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.8.2	(2013-05-20)		-Wow patch 5.3.0
+	General:
+		Updated .TOC for WOW patch 5.3.0
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.8.1	(2013-04-25)		-Wow patch 5.2.0
+	New variables:
+		%StatUniquePets% -Number of unique pets your character has.
+	Bugfix:
+		Fixed bug in getEquippedItems() that caused a LUA error when calling related functions (like Report() %itemlevel% and so on) when zoning into instances.
+	Documentation:
+		Updated the text for the events "Casted" and "Casting". There is no change in the underlying events just a clarification in the documentation.
+		-"Casted" will trigger on the start of (and sometimes during) channeled spells, and at the end of non-channeled spells.
+		-"Casting" will trigger on the start of non-channeled spells.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.8.0	(2013-03-05)		-Wow patch 5.2.0
+	General:
+		Updated .TOC for WOW patch 5.2.0
+	Bugfix:
+		HaveCooldown() should be less prone to return true for spells because of the global cooldown.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.7.9	(2013-02-07)		-Wow patch 5.1.0
+	General:
+		Search-results in the edit window are now clickable. You will then be taken to the documentation page for the function or variable you selected.
+		You can now click on a function listed under the "See also" section of the documentation to jump directly to that function.
+		Parser errors are now clickable. It will take you directly to the page and line number in question.
+		Parser will now output page and linenumber for lines that fail to parse properly. The parser will also output all errors under a single error-header.
+		Added a new 'LineNumber' feature. When enabled it will show linenumbers in the editor.
+		'Search & Highlight' now displays number of matches found in a better positioned label.
+		Parsing of the raw text will now be suspended until after combat ends. This is to prevent "Script ran too long"-errors with large volumes of text.
+		Addon now supports resolving battlepets-hyperlinks like [battlepet:Cinder Kitten].
+	New functions:
+		IsHostile() -Is your current target hostile towards you
+	Updated functions:
+		RaidMessage() -Function will now only color the string you input and not the whole RaidMessageFrame.
+		Report() -Friendship reputations will now output the localized name for the current rank.
+	Updated events:
+		"Chat" event now also supports "system" to trigger on system messages (requested by Delvai).
+	Code optimizations:
+		Internal tooltip scanning code will now cache its results for faster lookup of items.
+	BugFix:
+		Report() will now calculate the correct itemlevel if you only got offhand equipped or 2 weapons.
+		When resolving achievement-hyperlinks the addon will now also try to lookup the achievement using the name specified and not just the ID.
+		When resolving currency-hyperlinks, the addon will first try any ID specifed before using the name.
+		When resolving talent/glyph-hyperlinks, the addon will look in the list of your characters talents/glyphs.
+		Syntaxcoloring will no longer color strings inside quotes as functions. For example RawMacro("/run IFT() /say hello world").
+		Parser will now accept If-Statements with multiple spaces between keywords (THEN, OR, NOT, AND) even when the keywords are in lowercase.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.7.8	(2012-12-07)		-Wow patch 5.1.0
+	Bugfix:
+		%Itemlevel%, %ItemlevelTotal% and Report() will now calculate the correct itemlevel numbers even with items that are transmorgified or upgraded (credit to Phanx for pointing me in the direction of a solution).
+		Special thanks to Cassiopea-Doomhammer(EU) for helping me out with the testing ;-]
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.7.7	(2012-11-28)		-Wow patch 5.1.0
+	General:
+		Updated .TOC for WOW patch 5.1.0
+		Added a new searchbox to search and highlight text in the Edit window.
+		Fixed some typos in the documentation.
+		The battleground channel (/bg, /battleground) has been removed from the game. All functions that supported this like Chat(), Report() etc no longer does so.
+	New events:
+		Added "LostControl" that is triggered when you lose control of your character due to interrupts, root etc.
+	New functions:
+		HaveLostControl() -Will return true/false if you currently have lost control of your character.
+		InInstanceGroup() -Will return true/false if you are in an instance group (i.e. /instance).
+	Updated functions:
+		InGroup() -Will now also check if you are in an instancegroup (/instance).
+		Group() -Will now send chat messages to /instance if you are in an instance group.
+		Chat() -Now supports "Instance" as channel argument.
+		Report() -Updated how friendship reputation and rank is calculated due to changes in the Blizzard API.
+		HavePowerPoints() -Blizzard renamed a variable used with the Monk Chi from SPELL_POWER_LIGHT_FORCE to SPELL_POWER_CHI.
+	Updated variables:
+		%StatPets% will now output the number of pets as reported in your petjournal instead of from the statistics-page.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.7.6	(2012-11-04)		-Wow patch 5.0.5
+	New functions:
+		IsIndoors()			(requested by flabby)
+		IsModifierKeyDown()	(requested by flabby)
+	Updated variables:
+		%instancedifficulty% will now return "Scenario" instead of "Normal" when you are in a scenario.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.7.5	(2012-10-30)		-Wow patch 5.0.5
+	Code optimizations:
+		Reworked the code that periodically invokes garbage collection. This will hopefully reduce the occurence of "script ran too long" errors.
+	New functions:
+		ClickActionBar()
+		ExtraActionBarVisible()
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.7.4	(2012-10-21)		-Wow patch 5.0.5
+	General:
+		Added a few more lines in examples.txt for use with daily quests in Pandaria.
+	Updated functions:
+		CancelAura() -The function no longer uses the macro to cancel auras/buffs. It will therefore be possible to combine CancelAura() with UseItem() or Cast() in a single if-statement (credit to Doskious).
+		Report() -The 'experience' option will now round outputted numbers and use a a 'K/M' notation.
+	Updated variables:
+		The following variables will now will now round outputted numbers and use a a 'K/M' notation. Their internal datatype has also been changed from 'number' to 'string'.
+		%playerhealth%, %targethealth%, %focushealth%, %pethealth%, %playermaxhealth%, %targetmaxhealth%, %focusmaxhealth%, %petmaxhealth%
+		%playerpower%, %targetpower%, %focuspower%, %petpower%, %playermaxpower%, %targetmaxpower%, %focusmaxpower%, %petmaxpower%
+	BugFix:
+		ToggleRaidDisplay() -This function will not work when you are in combat because the Raidframe UI is then marked as protected by Blizzard (credit to Henrick).
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.7.3	(2012-10-13)		-Wow patch 5.0.5
+	General:
+		Added a new 'EasyCast' feature. When enabled it will trigger the default IfThen-macro when you are out of combat and do a double right-click.
+		You can now shift-click on items/quests/achievements while the edit window is open and it will insert the link-title (just like auctionhouse search).
+		Added several lines in examples.txt for use with daily quests in Pandaria.
+	New functions:
+		QuestItemInRange()
+		MouseOver()  -Same as IsTargeted() but looks at whats under your mouse cursor (idea from Theondry)
+	Updated functions:
+		UseQuestItem() -Argument is now optional. Will use the first found questitem from tracked list if omitted.
+		IsTargeted()   -Added a optional 'match' argument to allow partial matches on names.
+	New variables:
+		%MouseOverName% -Name of the npc/player/item currently moused over.
+	BugFix:
+		InRange() can now be found when using the searchboxes.
+		GetQuest feature will now complete quests that only have 1 quest reward as expected.
+		Report() will no longer crash and will properly output friendship reputations.
+		Color feature will no longer start duplicating text or remove newlines if you write a comment with no spaces in it (#;)
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.7.2	(2012-09-24)		-Wow patch 5.0.5
+	Updated functions:
+		InInstance() now supports 'scenario' as an argument.
+	Updated variables;
+		%InstanceDifficulty%, and %InstanceType% will now return 'Scenarios' or 'Challenge mode'.
+		%GuildLevel% now has a range of 0-25
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.7.1	(2012-09-15)		-Wow patch 5.0.5
+	General:
+		Added a new 'Color' feature. When enabled it will apply syntax coloring to the editor and examples in documentation.
+		With the introduction of syntax coloring, several of the colors used in the documentation have been changed to better match this new feature.
+		Required arguments are now yellow and optional arguments are purple (formerly blue and yellow).
+		Fixed values are now teal (formerly green).
+		The variables section in the morehelp window now uses a separate color to differ it from the arguments, actions and events sections.
+	Updated functions:
+		HasCooldown() has been renamed to HaveCooldown()
+	BugFix:
+		IfThen will now display a error message if your macro-list is full (credit to 'rwthomas111' for this one).
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.7.0	(2012-09-04)		-Wow patch 5.0.4
+	You can now separate IF-statements to run under different macros. Use the new MacroStart() and MacroEnd() functions (idea by balzakbr).
+	See the new 'MacroStart' section in '/ifthen morehelp' for more info.
+
+	General:
+		Added a searchbox to the Edit window. You can press TAB to jump between searching and editing.
+		Added a searchbox to the Morehelp window.
+		Added a new 'Minimal' feature. When enabled it will remove almost all the documentation from memory to reduce the addons footprint (about 20KB smaller).
+		Parser will now only print the first few possible values for an argument when it failes. This way you won't get insanely long error messages.
+		Updated FAQ with more questions and answers regarding macros and combat.
+		Updated Examples with renamed function names.
+	Bugfix:
+		Running both Countdown() and StopWatchStart() at the same time will no longer yield strange results.
+		HaveCritter() and HaveMount() functions are now working properly.
+	Updated functions:
+		Report() now support 'experience' as a type to output your current level and points needed for the next.
+		HasCritter() has been renamed to HaveCritter()
+		HasGlyph() has been renamed to HaveGlyph()
+		HasMount() has been renamed to HaveMount()
+		HasOpenQuest() has been renamed to HaveOpenQuest()
+		HasPet() has been renamed to HavePet()
+		HasTalent() has been renamed to HaveTalent()
+	New functions:
+		HaveAchievement()
+		HaveDurability()
+		Screenshot()
+		Emote()   (idea from xzoner)
+		SetFlag() and Flag() -You can set and check the value of your own internal variables with these functions.
+	New events:
+		Added "Achievement" event that is triggered when you earn an achievement.
+	Updated variables:
+		%InstanceDifficulty% now returns 'Raid Finder' when you are in Dragon Soul LFR.
+	New variables:
+		%WatchedFactionName% -Name of the faction shown on the experience bar.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.6.4	(2012-08-28)		-Wow patch 5.0.4
+	General:
+		Updated .TOC for WOW patch 5.0.4
+		Removed backwards-compatible code for patch 4.3.3
+	Updated functions:
+		RawMacro() now lets you specify a optional MacroName argument to let you write to other macros (idea from balzakbr).
+	New events:
+		Added "PVP" event that is triggered when your pvp-flag is changed.
+	Bugfix:
+		"AfkOrDnd" event is now only triggered when the player is Afk or Dnd and not other events.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.6.3	(2012-08-25)		-Wow patch 4.3.4 / MOP Beta 5.0.x
+	Bugfix:
+		HavePowerPoints() will no longer return strange values for Priests and Warlocks when running on patch 4.3.4
+		Warlocks no longer need to specify a type (Shard/Demonic/Ember). The code now infer this from your current spec.
+		Monks, Priests (Shadow Orbs) and Warlock's (Demonic Fury/Burning Embers) will be automatically available when running on patch 5.0.x
+		For all other classes and specs that dont have a secondary powertype (Holy Priest and Mages for example) the function will return false.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.6.2	(2012-08-25)		-Wow patch 4.3.4 / MOP Beta 5.0.x
+	General:
+		All windows can now be moved around by dragging the top of the window.
+		Removed all references to the 'Debug' option.
+		Examples.txt now got a few examples for Rogues.
+		Updated FAQ with more questions and answers.
+	Code optimizations:
+		Addon should now start up about 1 millisecond faster on average.
+		Added local pointers for global functions. This should reduce time used on global lookups while running.
+		MacroRefresh feature now uses the new RegisterUnitEvent() to reduce overhead.
+	Bugfix:
+		Macro will now properly reset to doing nothing if your current executing line dont touch the macro.
+	New functions:
+		HavePowerPoints()  -Lets you check your character's combo-points/chi/balance/rune/holy power/soul-shards/burning-embers (added after request by Pekesino).
+		RawMacro()  -Let you output the full raw text to put in the IfThen-Macro (added after request by NeerDeth).
+	New variables:
+		%LocalTime%, %LocalTime12%
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.6.1	(2012-08-12)		-Wow patch 4.3.4 / MOP Beta 5.0.x
+	General:
+		Added LibDataBroker support.
+		IfThen now add launcher shortcuts for the 'Edit' and 'MoreHelp' windows for databroker compatible addons like TitanPanel, ChocolateBar, Bazooka and so on.
+		You can now configure IfThen through a new interface panel (Game menu -> Interface -> AddOns tab). It has the same effect as using the slash commands (/ifthen or /ift).
+		Switched to using a new button template. The buttons should now look a bit better.
+	Updated functions:
+		Report() now returns the proper masculine/feminine form for reputation titles depending on your characters gender (%Report% variables).
+		Added support for friendship titles (basically single-Npc factions).
+	New functions:
+		IsTapped()
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.6.0	(2012-08-01)		-Wow patch 4.3.4 / MOP Beta 5.0.x
+	Updated IfThen to work with Mists of Pandaria (MOP) expansion. Many of the game's internal events and functions have been altered, removed or new ones have been added by Blizzard.
+		Some of the changes will only be visible when running version 5.0.x of WoW (The MOP Beta).
+		The .TOC interface number is still that of 4.3.3 to prevent 'Load out of date addons' issues for users on live servers.
+		Added support for the Pandaren monk class. Class color, etc.
+		Things like %GuildLevel% (0-25) and %PlayerLevel% (1-85) will auto-adjust (0-30 & 1-90) when running version 5.0.x of the game.
+
+	General:
+		Updated examples.txt with the correct function name "HavePVPEquipped()"
+		The addon will now check and close the existing edit/help window if its open before opening the other window when using slash commands instead of the buttons.
+		Removed hardcoded internal lists used for currencies and factions. It will now use a search-and-cache approach that seems to give the same performance.
+	New functions:
+		UseQuestItem() Will /use the item that is associated with a quest in you questlog
+		IsStealthed()
+		IsFalling()
+		HasCritter() Do you have a non-combat pet summoned
+		HasMount()
+		InBGQueue() Are you currently in a Battleground queue
+		HasTalent() -New with MOP beta
+		HasGlyph() -New with MOP beta
+		InPetBattle() -New with MOP beta
+	Updated functions:
+		HavePVPEquipped() is now aware of the new "PvP Power" stat that is introduced with MOP.
+		InLFGQueue() (in WoW 5.0.x) now has an optional 'Type' argument that lets you filter what queue you want to check for (Dungeon finder, Raid finder, Pet-Battles etc).
+		IsChanneling() now supports a new, optional Unit-argument that can be 'target', 'focus' or 'player' (default).
+		InStance() will now work properly with localized versions of the game. However it now requires you to type the exact, localized name of the stance: "Bear Form", "Bärengestalt", and so on.
+	New variables:
+		%PlayerGold%, %GuildLevel%, %GuildAchievementPoints%, %CritterName%, %MountName%, %PVPTimer%
+	Updated variables:
+		%PlayerFaction%, %TargetFaction% and %FocusFaction% can return 'Neutral' in some cases in addition to 'Alliance' and 'Horde' (like when you are a level 1 Pandaren).
+		%EquipmentRanged% will disappear when running version 5.0 of the game since the ranged/relic slot no longer exists.
+	New events:
+		Added "PetBattleStart" and "PetBattleEnd" events that will trigger on the start and finish of pet-battles introduced with MOP.
+	Updated events:
+		"LFGInvite" event now also triggers when queued for pet-battles.
+	Bugfix:
+		Chat() will no longer fail when using 'Emote' as an channel-argument.
+		IsMuted() will now  properly default to using the 'both' argument if nothing is inputted instead of crashing.
+		"SpellCheck" is now working as intended. Remember "/ifthen spellcheck" to enable.
+		"ItemUnEquipped" event should now trigger correctly.
+		Parser will no longer crash if you only have "ItemEquipped" events but no "ItemUnEquipped" in your raw text.
+		Fixed a bug that caused the parser to not run "ItemEquipped" events if you also didn't have any "ItemUnEquipped" events in your raw text.
+		HasBuff() and HasDeBuff() will now work even if the stackcount returned by the game is 0 (?!).
+		Using "/ifthen onevent" to disable OnEvent()-statements will now properly unregister all of its background events (like those used by chat).
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.5.9	(2012-03-18)		-Wow patch 4.3.3
+	General:
+		If you type "/ifs" or "/ifsslash" with no argument it will list all the current OnEvent("Slash", "title") triggers that are available.
+		Removed several lines related to when "/ifs debug" is enabled since i think nobody uses it anyway.
+		Optimized several loops by referring to a single local function pointer instead of calling global functions directly inside loops
+	New functions:
+		StopWatchStart(), StopWatchStop(), StopWatchPause(), StopWatchResume()
+		Roll()
+		Random()
+		RandomChat()
+		HavePVPEquipped()
+	Updated functions:
+		Report() now supports a new type called 'pvpgear'. This can be used to output the number of PvP-items that the player/target has equipped.
+		Report() now supports a new type called 'statistic'. This can be used to output the statistical values for a player ('Creatures killed', 'Bandages used' etc).
+		Report() will now format the numbers it outputs with spaces between thousands and a maximum of 2 decimals.
+		Report() will now also set the %Report1%, %Report2% and %Report3% variables with meaningful data so you can customize your own output.
+	Variables:
+		Variables that output numerical values will now adhere to the formatting rules just like string variables. Look in the variables section of '/ifthen morehelp' for details.
+		Variables with texture escape sequences in them will not be mangled by capitalization.
+	New variables:
+		%RaidRollName%  Randomly picks a player in your party/raid and outputs their name.
+		%Random%        Outputs the number generated by the Random() function.
+		%Report1%, %Report3%, and %Report3% these output the data from the Report() function.
+		%StatAchievementPoints%, %StatMounts%, %StatPets%, %StatDeaths%, %StatKills%, %StatHonorKills%
+	Documentation:
+		Added % around variables names to make it easier to identify them.
+		The 'See also' field will no longer be empty.
+		The 'Type' field is visible again for variables.
+		Updated documentation with many more references, examples and remarks.
+	Bugfix:
+		Chat() will now print a message if a channel-name/number does not exists instead of throwing an exception.
+		Addon will replace currency textures (gold,silver and copper icons) with a localized string if the string is to be sendt in chat.
+		Addon will now strip out any other texture escape sequences from strings destined for chat since they are not allowed.
+		Datatype for the variable %Weekday% is now wide string. It used to be WEEKDAY[] but that will not work since the result returned are localized strings.
+		Datatype for IsCurrentTalentTree() argument was internally set to INT[1;2;3]. This has now been fixed to INT[1;3] as it should be.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.5.8	(2012-02-17)		-Wow patch 4.3.2
+	Updated functions:
+		Cooldown() now supports an optional 'Title' argument so that you can share a cooldown between multiple statements.
+		AutoSetRoles() should now work properly with non-english clients.
+	Updated variables:
+		The following variables now return localized strings when using non-english game clients:
+		instancedifficulty, instancetype, playerpowertype, targetpowertype, focuspowertype, petpowertype, playergender, targetgender, focusgender, weekday
+	Bugfix:
+		The variables playerpowertype, targetpowertype, focuspowertype, petpowertype had their internal datatypes set to number. It has now been correctly set to string.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.5.7	(2012-02-07)		-Wow patch 4.3.2
+	General:
+		Added the 'Essence of Corrupted Deathwing' currency to internal lists.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.5.6	(2012-01-18)		-Wow patch 4.3
+	Bugfix:
+		Fixed bug that caused error when you did not have any IF statements declared in your raw-text (credit to trigunwow for reporting this).
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.5.5	(2011-12-04)		-Wow patch 4.3
+	General:
+		Added the new 'Darkmoon Prize Ticket' currency to internal lists.
+		IfThen will now as a last resort traverse the Blizzard UI to find faction and currency info when it does not find the ID's in its internal lists.
+		This will make the addon still resolve links etc when transitioning between patches.
+		Hyperlinks should now also support localized currency names.
+			i.e. if you are on a German client, then you should be able to type 'Gewinnlos des Dunkelmond-Jahrmarkts' instead of 'Darkmoon Prize Ticket'.
+
+	Bugfix:
+		Fixed bug that caused error when attempting to resolve a unknown currency link (i.e. [currency:some nonexistant currency]).
+
+	Updated functions:
+		Report() now support specifying currency and faction names in your localized language (french, german etc).
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.5.4	(2011-12-02)		-Wow patch 4.3
+	General:
+		Added the new 'Mote of Darkness' currency to internal lists.
+
+	Bugfix:
+		Fixed bug that caused error when opening a tradeskill window (Cooking, Engineering etc).
+
+	Updated functions:
+		Print() and RaidMessage() now also support class names as a color-argument (mage, druid, warrior, etc)
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.5.3	(2011-11-30)		-Wow patch 4.3
+	General:
+		Updated .TOC for WOW patch 4.3
+
+	Bugfix:
+		Will no longer get error on startup. This was caused by a change by Blizzard related to the macro code.
+
+	Changed events:
+		OnEvent("LFGRolecheck") will not trigger multiple times when the dialog is shown.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.5.2	(2011-11-25)		-Wow patch 4.2
+	General:
+		Updated various typoos in the documentation.
+		Replaced alot of unused empty table declarations with nil, this should reduce the memory footprint.
+		Also removed some unnecessary table declarations as well as replacing default eventhandlers with a single pointer.
+		Reduced memory footprint by about 100KB by clearing unneeded functions from memory after the addon has been loaded.
+		Trimmed away the last fat by slimming down the documentation-tables after the parser has fetched its data.
+		Total the addon now uses about 712KB, that is 265KB less than before.
+
+	New functions:
+		Added Guild("Message") and Officer("Message") as shortcuts instead of having to type Chat("Guild/Officer", "Message");
+		Added CancelAura() so that you can cancel a buff in macro (request from 'dyaeblca'). The restrictions are the same as for UseItem() and Cast().
+		Added CancelForm() that will cancel the players current form. The same result is also possible by using Cast() and CancelAura().
+		Added InRange() that will return true if you are in range of a unit to use a specified spell/item.
+		Added PlayerHasMoved() that will return true/false whether the player has moved since the last time the function was called.
+
+	New events:
+		Added OnEvent("UIError") the event is triggered whenever the user interface shows an error or info message like 'you have no target' or 'no fish are hooked' (added after idea from 'hauntedbypast').
+		Added OnEvent("LFGRolecheck") the event is triggered when there is a request for a LFG role-check.
+
+	Changed events:
+		OnEvent("Casting") and OnEvent("Casted") now support 'group' as a value for the Unit-argument that will trigger on party/raid members. Reply() and %replyName% now also work with these events.
+		Special thanks to Callena-Doomhammer(EU) for helping me out with the testing ;-]
+
+	Hyperlinks:
+		Hyperlinks that resides at the very end or very start of a string will no longer fail to resolve (promise).
+		Hyperlinks in the format [type:id:name] now will work if the name got : (colon) in it, i.e. [item:1234:Schematic: My Recipe] will work, however [item:Schematic: My Recipe] will not be resolved.
+
+	Variables added:
+		%PlayerLocation%	"Stormwind City, Valley Of Heroes: 72.3, 88.8"
+		%PlayerCoordinates%	"72.3, 88.8"
+		%ScreenResolution%	"800x600"
+		%PlayerRealm%, %TargetRealm% and %FocusRealm%
+		%InstanceName%, %InstanceType%, %InstanceDifficulty%, %InstanceSize% and %GroupCount%.
+
+	Variables removed:
+		%RealmName% is removed and has been replaced by %PlayerRealm%, %TargetRealm% and %FocusRealm%
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.5.1	(2011-11-19)		-Wow patch 4.2
+	Bugfix: OnEvent("Chat") will now trigger on Officer chat.
+	DBMTimer() now has a third optional broadcast argument so that timers can be broadcasted to the others in the raid.
+	DBMRange() new function that toggles the DBM range-radar.
+	Report() now supports 'savedinstance' that will return a list of the party/raids you are currently saved for.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.5.0	(2011-10-28)		-Wow patch 4.2
+	A rewrite to parts of Documentation.lua has lead to a dramatic improvement in loading speed (from 36 to <1 second).
+	You no longer need to write keywords (IF, THEN, AND, OR, NOT) in uppercase letter, they will now work in lowercase or mixed case too.
+	The text-parser now supports proper escaping of the % (percent) character.
+	Functions that require other addons, will now try to enable the addon and its dependencies before it gives up.
+	Documentation:argCount() used to return the wrong max argument value and this caused the text-parser to sometimes crash.
+	Internal counters for OnEvent("Tick") is now properly reset whenever the Raw text is reparsed. This shold remove the problem with statements not triggering when closing the edit window.
+	SetTimer() will no longer cause an LUA error if you call it from an OnEvent("Timer") statement.
+	Various typoos corrected and documentation updated.
+	Removed non-supported arguments from many functions.
+	Added the command "/ifthen splitlink [link]" so users can easily get the id and other data from links. Simply type the command and the link will be split up into its base parts.
+	IfThen is now less verbose and will not run so much code when you are moving in/out of instances, teleporting etc.
+	IfThen is now less verbose in the chatwindow when you are moving between text pages.
+	The Addon now supports comparing its version number against other players in your guild and who you group with (/ifthen version).
+	Made the function list wider and added a scrollbar.
+	Removed the "All" button from MoreHelp so that the window will scale properly in low resolutions.
+	Removed support for %t, %f, %r, %p and %l since we now have full support for enviroment variables.
+
+	Hyperlinks:
+		Hyperlinks in text will now properly add the correct amount of spaces before/after itself.
+		You can now write both [type:id:text] and [type:text] and both hyperlink formats will be resolved.
+		Support has been added for currency and instance hyperlinks: [currency:currencyname] and [instance:instancename]
+		If you are saved to the instance then it will resolve it as a hyperlink, if not it will simply output the text [instancename].
+
+	New functions and events:
+		Experimental: IsBoss()
+		IsSaved("instancename")
+		HasHealth(), HasPower(), HasPet(), IsCurrentTalentTree()
+		InMyGuild(), InMyGroup(), InMyParty(), InMyRaid(), InMyBattleground(), InGuild()
+		Compare() and CompareNum()  Makes it possible to compare two values using string- or numeric-comparison
+		OnEvent("ServerTime")
+
+	Modified functions and events:
+		Many functions that previously had a UNIT argument, now also support "pet" as an option.
+		Renamed Speak() to Chat().
+		Renamed Timer() to SetTimer().
+		MarkTarget() now supports an optional UNIT argument. It will default to 'target' if omitted.
+		IsAssistant() now supports an optional UNIT argument. It will default to 'player' if omitted.
+		RaidMessage() now has a COLOR argument just like Print() has.
+		RaidMessage() will now properly display hyperlinks.
+		Report() now has an additional, optional argument; UNIT. It will however sometimes be ignored. See the documentation.
+		Report() now returns hyperlinks for currency names.
+		OnEvent("Chat") now supports Battle.net channels, whispers and status updates.
+		The documentation for OnEvent("Chat") has been updated so that only the relevant channels are listed (e.g. listening for /raid will trigger on both /raid and /raid_warning)
+
+	Added support for Enviroment Variables. See the new 'Variables' section in '/ifthen morehelp'.
+		There are over 70 different variables supported, but the parser dynamically adjusts to which you are using and will therefore not degrade in performance.
+		The variables are mostly strings, but a few are numeric. The variables have datatypes, just like funcion arguments and the text-parser will consider this when parsing the raw text.
+		The text-parser will output a user-friendly error messages when datatype mismatches occur.
+		Based on the way you write them, you can change the formatting of the variables (uppercase, lowercase, capitalized etc).
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Version	1.0.0	(2011-10-06)		-Wow patch 4.2
+	First version released
+	Use '/ifthen morehelp' ingame for help on syntax, etc.
+	See examples.txt for example statements
+	See faq.txt for most asked questions
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -1,0 +1,184 @@
+IfThen - Examples
+
+
+The list below are examples of IF-THEN statements that I use.
+The addon will evaluate each statement starting from the top and moving towards the bottom.
+Each part of the statement must be TRUE before it moves on to the next part of it. If the whole line is TRUE then the addon will stop processing further lines.
+
+In short; the first and best line that matches will be run.
+
+
+#General stuff;
+#  Use seahorse mount in Vashj'ir zone;
+IF HasBuff("Sea Legs") AND IsSwimming() THEN Cast("Abyssal Seahorse");
+
+#Cast slowfall if my mage is falling;
+IF IsFalling() AND IsClass("Mage") THEN Cast("Slow Fall");
+
+# Fish if we got the fishing pole equipped (except when in the air!!);
+IF NOT IsFlying() AND HaveEquipped("Mastercraft Kalu'ak Fishing Pole") AND Cooldown("2") THEN Cast("Fishing");
+#  Always try to loot corpses if i got them targeted;
+IF IsDead("target") THEN UseItem("Loot-A-Rang");
+IF HasBuff("Levitate") THEN Print("We dont like levitate") AND CancelAura("Levitate");
+
+#Rogue - Notify me when to use Rupture;
+OnEvent("Casted","Rupture") AND HasPower("player", "5", "numeric", "eq", "Combo Points") THEN SetTimer("RupTimer","18");
+OnEvent("Casted","Rupture") AND HasPower("player", "4", "numeric", "eq", "Combo Points") THEN SetTimer("RupTimer","15");
+OnEvent("RupTimer") THEN RaidMessage("Do Rupture now!");
+
+#Example of using RawMacro() to output multiple statements in the macro;
+# Macro rules still apply, first /use or /cast thats doable will be done and nothing more;
+IF IsClass("Mage") AND NOT InCombat() THEN RawMacro("/run IFT() /target Hogger /dance /cast Arcane Power /use Mana Gem /cast Arcane Blast /say Text with slash\/inside it");
+
+#Player versus Player;
+#  Will attempt to use the RPG from Wintergrasp if its in inventory;
+IF IsPVP("player") AND HaveItem("The RP-GG") THEN UseItem("The RP-GG");
+#  Hide the raid frame when we are in pvp;
+OnEvent("Zoning") AND IsPVP() AND InRaid() OR InBattleGround() THEN ToggleRaidDisplay("hide");
+
+
+#Reports;
+OnEvent("Chat","Whisper","","port","indexof") AND InLFGQueue() AND Cooldown("60") THEN Reply("Automated reply: I am in the LFG queue. No portals.");
+OnEvent("Chat","Whisper","","port","indexof") AND NOT InLFGQueue() AND NOT InGroup() AND Cooldown("60") THEN Reply("Automated reply: 15g for portal, Invite if you need.");
+OnEvent("Chat","Whisper","","!hero","exact") AND InGroup() THEN Report("Reply","Cooldown","Time Warp") AND Report("Reply","Buff","Temporal Displacement");
+OnEvent("Chat","Raid","","!blame","exact") AND Cooldown("30") THEN Chat("Raid","Its all my fault!!!");
+
+#What are my stats?;
+OnEvent("Slash","stats") AND Print("Achievement points: %statachievementpoints%.  Mounts: %statMounts%.  Pets: %statPets%. Toys: %statToys%.");
+
+#Quick way to lookup your own and targets itemlevel (itemlevel of equipped items, not all the stuff in inventory);
+OnEvent("Slash","level") AND Report("Print","ItemLevel","equipped");
+OnEvent("Slash","targetlevel") AND Report("Print","ItemLevel","target");
+
+#Quick way to determine what instances you are saved to;
+OnEvent("Slash","saved") THEN Report("print","savedinstance","raid") AND Report("print","savedinstance","party") AND Report("print","savedinstance","world");
+
+#What itemlevel is my target ?. Must use /inspect first;
+OnEvent("Slash","level") AND Report("Print","ItemLevel","","target");
+
+#Will start a countdown from 5 seconds;
+OnEvent("Chat","Group","","!sync") AND InGroup() AND CoolDown("10") THEN Countdown("Group","5","Syncing spellcast, start casting on 1...");
+
+#Events (sounds: AuctionWindowOpen, UI_BnetToast);
+OnEvent("Chat","Whisper") AND InInstance() AND InCombat() AND Cooldown("60") THEN Reply("Automated reply: Currently in combat.");
+OnEvent("Chat","Whisper") AND IsAFK("player") AND Cooldown("10") THEN PlayAudio("UI_BnetToast") AND Print("Whisper incoming!");
+
+OnEvent("GroupInvite") AND IsAFK("player") THEN PlayAudio("UI_BnetToast") AND Print("Invite incoming from %replyName%!");
+OnEvent("GroupInvite") AND Cooldown("30") AND InLFGQueue() THEN DeclineGroup() AND Reply("Automated reply: I am in the LFG queue. Invite auto-declined.");
+
+OnEvent("Dead") AND NOT IsPVP("player") AND InParty() THEN Chat("PARTY","Members of the party: I am dead");
+OnEvent("Dead") AND NOT IsPVP("player") AND InRaid()  THEN Chat("RAID","My fellow RaidMembers: I am dead");
+
+OnEvent("TalentSpecChanged") AND NOT IsPVP() AND InInstance() AND IsClass("mage") THEN Group("Wait a sec while i regen mana. I just switched talents.");
+
+#Mysterious egg from The Oracles faction has a cooldown of 3 days before you can open it. This will alert you when it's hatched;
+OnEvent("Zoning") AND NOT HaveItem("Mysterious Egg") THEN PlayAudio("UI_BnetToast") AND Message("Mysterious Egg Hatched or missing!");
+
+#Give us a beep and a message when we get Heroism or Time Warp;
+OnEvent("Buff") AND HasBuff("Heroism") OR HasBuff("Time Warp") AND Cooldown("10") AND THEN PlayAudio("UI_BnetToast") AND Print("!!!==Heroism || Time Warp==!!!");
+
+#Try to mark the target we are sheeping with moon;
+OnEvent("Casting","Polymorph") AND IsTargeted() AND NOT IsMarked("target") AND IsLeader() OR IsAssistant() OR InParty() THEN MarkTarget("moon") AND Group("Casting [spell:Polymorph] on  {moon} %targetName%...");
+
+
+#Use time warp at 40% on bosses?;
+OnEvent("Casted") AND IsBoss("target") AND HasHealth("target","40","percent","lte") AND NOT HaveCooldown("Time Warp") THEN Cooldown("60") AND PlayAudio("Gnome Male Roar") AND Print("Boss at 40% and [spell:Time Warp] is ready.");
+
+#Tell people about repair bot;
+OnEvent("Casted","Jeeves") AND InGroup() THEN Group("--> [item:49040:Jeeves] repairbot is up") AND Chat("Say","Jeeves, repairbot is up");
+
+
+#Warning when having items equipped like fishing pole and chef's hat and going into instances;
+OnEvent("Zoning") AND InInstance() AND HaveEquipped("Chef's Hat") OR HaveEquipped("Weather-Beaten Fishing Hat") THEN PlayAudio("UI_BnetToast") AND Message("Take off your chef/fishing hat");
+OnEvent("Zoning") AND InInstance() AND HaveEquipped("Mastercraft Kalu'ak Fishing Pole") THEN PlayAudio("UI_BnetToast") AND Message("UnEquip your fishing pole");
+
+#Auto set role to DPS when im on my mage;
+OnEvent("RoleCheck","","true") AND IsClass("mage","player") THEN Print("Rolecheck done, set to DPS automatically") AND SetRole("DPS");
+
+#If i'm raidleader then try to auto-set roles when people join;
+OnEvent("GroupChanges") AND IsLeader() OR IsAssistant() THEN AutoSetRoles();
+
+#Blackwing Descent - Maloriak - must spellsteal 'Remedy' orelse boss heals himself, need to watch /focus for buff too since we lose target during AOE-add phase;
+OnEvent("Buff","focus") AND HasBuff("Remedy","focus") AND Cooldown("1") THEN PlayAudio("UI_BnetToast") AND Print("===Spellsteal Remedy===");
+
+#Firelands - Shannox on Heroic -must interrupt Face Rage buff with a 30k oneshot spell, use /focus on RageFace;
+OnEvent("Buff","focus") AND NOT IsDead() AND HasBuff("Face Rage","focus") AND Cooldown("5") THEN PlayAudio("Kara Bell Toll") AND Print("=== Face Rage ===");
+
+
+#Daily quests;
+#  Uldum Dailies;
+IF InZone("Tahret Grounds") AND HaveOpenQuest("Thieving Little Pluckers") AND NOT IsTargeted("Nomarch Teneth") THEN UseItem("Tahret Dynasty Mallet");
+
+#  Deepholm Dailies;
+IF InZone("The Pale Roost") AND HaveOpenQuest("The Restless Brood") AND NOT IsTargeted("Terrath the Steady")  THEN UseItem("Stonework Mallet");
+IF InZone("Crumbling Depths") AND HaveOpenQuest("Underground Economy") AND NOT IsTargeted("Ricket") THEN UseItem("Ricket's Tickers");
+
+#  Tol Barad Dailies;
+IF InZone("The Restless Front") AND HaveOpenQuest("Magnets, How Do They Work?") THEN UseQuestItem("Magnets, How Do They Work?");
+
+#  Dalaran Dailies;
+IF InZone("Garm's Bane") AND HaveOpenQuest("Overstock") THEN UseQuestItem("Overstock");
+IF InZone("The Forlorn Mine") AND HaveOpenQuest("Maintaining Discipline") THEN UseItem("Disciplining Rod");
+IF InZone("River's Heart") AND HaveOpenQuest("The Ghostfish") AND HaveItem("Phantom Ghostfish") THEN  UseItem("Phantom Ghostfish");
+IF HaveOpenQuest("Cheese for Glowergold") AND HaveItem("Aged Dalaran Limburger") AND HaveItem("6","Half Full Dalaran Wine Glass") THEN UseItem("Empty Cheese Serving Platter");
+IF HaveOpenQuest("Mustard Dogs!") AND HaveItem("4",Wild Mustard") AND HaveItem("4",Rhino Dogs") THEN UseItem("Empty Picnic Basket");
+#	First setup a cooking fire and then use the cookpot to create the questitem;
+IF HaveOpenQuest("Sewer Stew") AND HaveItem("4","Chilled Meat") AND HaveItem("4","Crystalsong Carrot") AND NOT HasBuff("Cozy fire") THEN Cast("Basic Campfire");
+IF HaveOpenQuest("Sewer Stew") AND HaveItem("4","Chilled Meat") AND HaveItem("4","Crystalsong Carrot") AND HasBuff("Cozy fire") THEN UseItem("Stew Cookpot");
+#	First setup a cooking fire and then use the cookpot to create the questitem;
+IF HaveOpenQuest("Infused Mushroom Meatloaf") AND HaveItem("2","Chilled Meat") AND HaveItem("4","Infused Mushroom") AND NOT HasBuff("Cozy fire") THEN Cast("Basic Campfire");
+IF HaveOpenQuest("Infused Mushroom Meatloaf") AND HaveItem("2","Chilled Meat") AND HaveItem("4","Infused Mushroom") AND HasBuff("Cozy fire") THEN UseItem("Meatloaf Pan");
+
+#  StormWind Dailies;
+IF InZone("Olivia's Pond") AND HaveOpenQuest("Diggin' For Worms") AND HaveEquipped("Mastercraft Kalu'ak Fishing Pole") AND HaveItem("Overgrown Earthworm") THEN UseItem("Overgrown Earthworm");
+
+#  Argent Champion Dailies;
+IF InZone("Mistcaller's Cave") AND HaveOpenQuest("Mistcaller Yngvar") THEN UseQuestItem("Mistcaller Yngvar");
+IF IsTargeted("Slain Tualiq Villager") AND HaveOpenQuest("The Light's Mercy") THEN UseQuestItem("The Light's Mercy");
+IF IsTargeted("Fallen Hero's Spirit") AND HaveOpenQuest("The Fate Of the Fallen") AND HaveItem("Discarded Soul Crystal") THEN UseItem("Light-Blessed Relic");
+IF HaveOpenQuest("What Do You Feed a Yeti, Anyway?") AND HaveItem("Fresh Chum") THEN UseItem("Fresh Chum");
+
+#  Oracles;
+IF InZone("The Stormwright's Shelf") AND HaveOpenQuest("Song of Fecundity") THEN UseItem("Horn of Fecundity");
+IF InZone("The Stormwright's Shelf") AND HaveOpenQuest("Song of Wind and Water") THEN UseItem("Drums of the Tempest");
+IF InZone("The Lifeblood Pillar") AND HaveOpenQuest("Power of the Great Ones") THEN UseItem("Dormant Polished Crystal");
+
+IF HaveOpenQuest("Song of Reflection") AND
+	InZone("The Skyreach Pillar") OR
+	InZone("The Suntouched Pillar") OR
+	InZone("The Mosslight Pillar") OR
+	InZone("The Glimmering Pillar") THEN UseItem("Didgeridoo of Contemplation");
+IF HaveOpenQuest("A Cleansing Song") AND InZone("River's Heart") OR InZone("Wintergrasp River") OR InZone("Bittertide Lake") THEN UseItem("Chime of Cleansing");
+
+
+#  Pandaria - Tillers faction;
+IF InZone("Sunsong Ranch") AND MouseOver("Parched", "startswith") THEN UseItem("Rusty Watering Can");
+IF InZone("Sunsong Ranch") AND MouseOver("Infested", "startswith") THEN UseItem("Vintage Bug Sprayer");
+
+#  Pandaria - Anglers;
+IF InZone("Sandy Shallows") AND HaveOpenQuest("Like Bombing Fish In a Barrel") AND NOT IsDead("target") AND IsTargeted("Sting Ray") THEN UseItem("Goblin Fishing Bomb");
+IF InZone("Sarjun Depths") AND HaveOpenQuest("Huff & Puff") AND NOT IsDead("target") AND IsTargeted("Prickly Puffer") THEN UseItem("Angler's Fishing Spear");
+IF InZone("Krasarang Wilds") AND HaveOpenQuest("Armored Carp") AND NOT IsDead("target") AND IsTargeted("Armored Carp") THEN UseQuestItem("Armored Carp");
+
+#  Pandaria - Klaxxi;
+IF InZone("Zan'vess") AND MouseOver("Zan'thik Amberhusk") AND HaveOpenQuest("Meltdown") THEN UseQuestItem("Meltdown");
+IF InZone("Terrace of Gurthan") AND NOT IsTargeted() AND HaveOpenQuest("Nope Nope Nope") THEN UseQuestItem("Nope Nope Nope");
+IF IsTargeted("Ik'thik Amberstinger") AND NOT IsDead("target") AND HaveOpenQuest("A Little Brain Work") THEN UseQuestItem("A Little Brain Work");
+
+#  Pandaria - Cloud Serpents;
+IF IsTargeted("Injured Hatchling") THEN UseItem("Heavy Windwool Bandage");
+
+#  Pandaria - Golden Lotus;
+IF InZone("Mistfall Village") AND HaveOpenQuest("My Town, it's On Fire Again") AND HaveItem("Mistfall Water Bucket", "1", "gte") THEN UseItem("Mistfall Water Bucket");
+IF InZone("The Golden Stair") AND HaveOpenQuest("Cannonfire") AND MouseOver("Cannon","indexof") THEN UseQuestItem("Cannonfire");
+IF InZone("The Emperor's Approach") AND HaveOpenQuest("Given a Second Chance") AND MouseOver("Wounded","indexof") THEN UseQuestItem("Given a Second Chance");
+IF InZone("Ruins of Guo-Lai") AND HaveOpenQuest("That's Not a Rock!") THEN UseQuestItem("That's Not a Rock!");
+
+#  Pandaria - Shado-Pan;
+IF InZone("Gai-Cho Battlefield") AND IsFlying() AND HaveItem("Highly Explosive Yaungol Oil", "1", "gte") THEN UseItem("Highly Explosive Yaungol Oil");
+
+#  Pandaria - Jade Temple;
+IF InZone("Jade Temple Grounds") AND HaveItem("Stack of Mantras") AND IsTargeted("Yu'lon Guardian") THEN UseItem("Stack of Mantras");
+
+#  Pandaria - Niuzao Temple;
+IF InZone("Niuzao Temple") AND HaveOpenQuest("Fallen Sentinels") AND IsTargeted("wounded", "indexof") THEN UseItem("Yak's Milk Flask");
