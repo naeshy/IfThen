@@ -3846,7 +3846,7 @@ function Documentation:DeclareDocumentation()
 	p[PTR]	=	Methods.do_OnEvent_IFTHEN_UI_ERROR;
 	d[strlower(EV..p[NAME])] = p;
 	-- --------------------------------------------
-
+--[[
 	-- --------------------------------------------
 	p = self:CreateOnDocStruct();
 	p[NAME]	=	"WorldPVPInvite";
@@ -3864,7 +3864,7 @@ function Documentation:DeclareDocumentation()
 	p[PTR]	=	cache_EmptyEvent;
 	d[strlower(EV..p[NAME])] = p;
 	-- --------------------------------------------
-
+]]
 	-- --------------------------------------------
 	p = self:CreateOnDocStruct();
 	p[NAME]	=	"Zoning";

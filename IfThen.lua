@@ -224,7 +224,7 @@ function IfThen:OnEvent(s, event, ...)
 		end
 
 		--Register to receive addon messages from other clients
-		local booRegister = RegisterAddonMessagePrefix(CONST_AddonPrefix);
+		local booRegister =  C_ChatInfo.RegisterAddonMessagePrefix(CONST_AddonPrefix);
 		IFTHEN_frame:RegisterEvent("CHAT_MSG_ADDON");
 		--Announce our own version number to the world
 		self:VersionAnnounce(nil);
@@ -594,10 +594,10 @@ function IfThen:VersionAnnounce(strSender)
 			if (d < CONST_VersionAnnounceMax) then return nil end --We dont announce if its less than max seconds since last time we did an announce
 		end--if cache_versionAnnounceLast
 
-		if (booG) then SendAddonMessage(CONST_AddonPrefix, strMessage, "GUILD", nil); end
-		if (booI) then SendAddonMessage(CONST_AddonPrefix, strMessage, "INSTANCE_CHAT", nil); end
-		if (booP) then SendAddonMessage(CONST_AddonPrefix, strMessage, "PARTY", nil); end
-		if (booR) then SendAddonMessage(CONST_AddonPrefix, strMessage, "RAID", nil); end
+		if (booG) then C_ChatInfo.SendAddonMessage(CONST_AddonPrefix, strMessage, "GUILD", nil); end
+		if (booI) then C_ChatInfo.SendAddonMessage(CONST_AddonPrefix, strMessage, "INSTANCE_CHAT", nil); end
+		if (booP) then C_ChatInfo.SendAddonMessage(CONST_AddonPrefix, strMessage, "PARTY", nil); end
+		if (booR) then C_ChatInfo.SendAddonMessage(CONST_AddonPrefix, strMessage, "RAID", nil); end
 
 		cache_versionAnnounceLast = time(); --log the time when we did the announcements
 	end--if strSender

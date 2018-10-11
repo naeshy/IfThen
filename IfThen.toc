@@ -1,6 +1,6 @@
 ﻿## Interface: 80000
 ## Title: IfThen
-## Version: 2.0.9
+## Version: 2.0.8
 ## X-AddonType: FULL
 ## Notes: Allows you to create your own IF THEN statements that will dynamically change the function of a button
 ## Dependencies:
